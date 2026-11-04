@@ -1052,7 +1052,7 @@ const MODEL = {"params":{"bay":8.0,"n_bays":3,"depth":16.0,"n_trusses":3,"pier_a
   const cutRowOf = id => M.cutlist.find(r => r.marks && r.marks.indexOf(id) >= 0);
   const jointChips = list => list.map(j => M.joints[j] ? `<button class="jchip" data-j="${j}">${j} · ${esc(M.joints[j].name)}</button>` : '').join('');
   const defaultInfo = () => {
-    info.innerHTML = `<div class="eyebrow">Selection</div><h3>Empty selection</h3>
+    info.innerHTML = `<h3>Empty selection</h3>
       <p class="note">Click a log in the model or a row in the cut list.</p>
       <dl><dt>Members</dt><dd>${M.members.length}</dd><dt>Logs to cut</dt><dd>${S.n_logs}</dd><dt>Green weight</dt><dd>~${S.wood_weight.toLocaleString()} lb</dd>
       <dt>Ridge</dt><dd>${fmtFt(S.levels.ridge)}</dd><dt>Eave</dt><dd>${fmtFt(S.levels.eave)}</dd><dt>Under ties</dt><dd>${fmtFt(S.levels.tie_under)}</dd></dl>`;
