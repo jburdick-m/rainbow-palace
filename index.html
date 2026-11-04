@@ -6,7 +6,7 @@
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@600;800&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
 <style>
 /* Layout: a drawing set. Title block, then the live model, then generated drawings, details (joints) and schedules. */
 :root {
@@ -14,7 +14,7 @@
   --cedar:#8B3A1D; --cedar-soft:#F1E1D8; --flag:#C9520C; --steel:#5C7482; --ok:#2E6A3A; --ok-soft:#DDEBDF;
   --wood-fill:#CFA47C; --wood-end:#AE7A4E; --wood-peeled:#E6CBA6; --wood-line:#6B4127; --oak:#E2C79A;
   --concrete:#C9C8C1; --metal:#9AAAB2; --fw:#D8B98F; --gear:#B9B2A6; --sky:#DCE5E8;
-  --font-display:"Big Shoulders Display","Arial Narrow",Impact,sans-serif;
+  --font-display:"Jost","Futura","Century Gothic",sans-serif;
   --font-body:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
   --font-mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
 }
@@ -189,30 +189,51 @@ pre { margin:0; background:var(--sheet); border:1px solid var(--rule); padding:1
 .figs { counter-reset:fig; }
 figure { counter-increment:fig; }
 figcaption { display:flex; align-items:baseline; gap:10px; max-width:none; }
-figcaption::before { content:counter(fig, decimal-leading-zero); font:500 11px var(--font-mono); color:var(--muted); letter-spacing:.06em; }
+figcaption::before { content:counter(fig, upper-alpha); font:500 11px var(--font-mono); color:var(--muted); letter-spacing:.06em; }
 figcaption::after { content:"NTS"; margin-left:auto; font:500 11px var(--font-mono); color:var(--muted); letter-spacing:.1em; }
+
+/* ---- presentation-deck styling ---- */
+:root:not([data-theme="dark"]) { --paper:#F5F4F0; --sheet:#FBFAF7; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --paper:#121516; --sheet:#181C1D; } }
+:root[data-theme="dark"] { --paper:#121516; --sheet:#181C1D; }
+.wrap { gap:64px; padding-block:48px 72px; }
+.hd { padding-bottom:18px; border-bottom:1px solid var(--ink); }
+h1 { font:300 clamp(2.2rem, 6.5vw, 4.2rem)/1 var(--font-display); text-transform:uppercase; letter-spacing:.2em; }
+h2 { font:400 clamp(1.4rem, 3vw, 1.85rem)/1.1 var(--font-display); letter-spacing:.02em; }
+h3, .info h3 { font:400 1.35rem/1.15 var(--font-display); letter-spacing:.01em; }
+.eyebrow, th, .info dt { font-family:var(--font-display); font-weight:500; letter-spacing:.16em; }
+.sec-head { border-bottom:1px solid var(--rule-strong); padding-bottom:10px; }
+main, .wrap { counter-reset:sec; }
+.sec-head h2::before { counter-increment:sec; content:counter(sec, decimal-leading-zero); font:400 .62em var(--font-display); letter-spacing:.12em; color:var(--muted); margin-right:14px; vertical-align:.25em; }
+/* model: selection pane sits under the view at every width */
+.viewer { grid-template-columns:minmax(0,1fr); border-color:var(--rule); }
+.info { border-left:0; border-top:1px solid var(--rule); max-height:none; display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1.4fr); gap:6px 32px; align-items:start; padding:18px 20px; }
+.info > * { grid-column:1; }
+.info > dl { grid-column:2; grid-row:1 / span 6; grid-template-columns:repeat(auto-fill, minmax(150px, auto) minmax(90px, 1fr)); }
+@media (max-width:700px) { .info { grid-template-columns:minmax(0,1fr); } .info > dl { grid-column:1; grid-row:auto; grid-template-columns:auto 1fr; } }
+/* toolbar: quiet text controls instead of chips */
+.toolbar { gap:10px 28px; }
+.chip-t span, .btn { font:500 11.5px/1 var(--font-display); letter-spacing:.14em; text-transform:uppercase; border-radius:0; }
+.chip-t span { border:0; background:transparent; padding:7px 2px 6px; border-bottom:1px solid transparent; color:var(--muted); }
+.chip-t input:checked + span { background:transparent; color:var(--ink); border-bottom-color:var(--ink); }
+.btn { border:0; background:transparent; padding:7px 2px 6px; border-bottom:1px solid transparent; }
+.btn:hover { border-bottom-color:var(--rule-strong); }
+.btn.on { border-bottom-color:var(--flag); }
+.tgroup { gap:4px 16px; }
+/* project data: a two-column spec list with hairlines */
+.specs { margin:0; display:grid; grid-template-columns:repeat(2, minmax(0,1fr)); column-gap:56px; border-top:1px solid var(--ink); }
+.specs > div { display:flex; justify-content:space-between; align-items:baseline; gap:16px; padding:11px 0; border-bottom:1px solid var(--rule); min-width:0; }
+.specs dt { font:500 11.5px/1.3 var(--font-display); letter-spacing:.16em; text-transform:uppercase; color:var(--muted); }
+.specs dd { margin:0; font:400 15px/1.3 var(--font-body); font-variant-numeric:tabular-nums; text-align:right; }
+@media (max-width:640px) { .specs { grid-template-columns:minmax(0,1fr); } }
+.fig-scroll, .tbl { border-color:var(--rule); }
+figcaption b { font:400 14px var(--font-display); letter-spacing:.08em; text-transform:uppercase; }
 @media (prefers-reduced-motion: reduce) { * { scroll-behavior:auto !important; } }
 </style>
 
 <div class="wrap">
 
-<header class="tb" aria-label="Title block">
-  <div class="tb-main">
-    <div class="eyebrow">Plans · <span data-k="date"></span></div>
-    <h1>Rainbow Palace</h1>
-    <p>Round whole-log truss pole barn built from nearby cedar.</p>
-  </div>
-  <div class="tb-grid">
-    <div class="tb-cell"><span class="k">Footprint</span><span class="v" data-k="footprint"></span></div>
-    <div class="tb-cell"><span class="k">Total under roof</span><span class="v" data-k="area"></span></div>
-    <div class="tb-cell"><span class="k">Shop</span><span class="v" data-k="shop"></span></div>
-    <div class="tb-cell"><span class="k">Ridge / eave</span><span class="v" data-k="heights"></span></div>
-    <div class="tb-cell"><span class="k">Logs</span><span class="v" data-k="logs"></span></div>
-    <div class="tb-cell"><span class="k">Trees to fell</span><span class="v" data-k="trees"></span></div>
-    <div class="tb-cell"><span class="k">Firewood</span><span class="v" data-k="cords"></span></div>
-    <div class="tb-cell"><span class="k">Cash to buy</span><span class="v" data-k="cash"></span></div>
-  </div>
-</header>
+<header class="hd"><h1>Rainbow Palace</h1></header>
 
 <section class="sec" id="model" aria-label="3D model">
   <div class="toolbar">
@@ -245,6 +266,19 @@ figcaption::after { content:"NTS"; margin-left:auto; font:500 11px var(--font-mo
   </div>
 </section>
 
+
+<section class="sec" id="data" aria-label="Project data">
+  <dl class="specs">
+    <div><dt>Footprint</dt><dd data-k="footprint"></dd></div>
+    <div><dt>Total under roof</dt><dd data-k="area"></dd></div>
+    <div><dt>Shop</dt><dd data-k="shop"></dd></div>
+    <div><dt>Ridge / eave</dt><dd data-k="heights"></dd></div>
+    <div><dt>Logs</dt><dd data-k="logs"></dd></div>
+    <div><dt>Trees to fell</dt><dd data-k="trees"></dd></div>
+    <div><dt>Firewood</dt><dd data-k="cords"></dd></div>
+    <div><dt>Cash to buy</dt><dd data-k="cash"></dd></div>
+  </dl>
+</section>
 
 <section class="sec" id="drawings" aria-labelledby="h-dr">
   <div class="sec-head">
