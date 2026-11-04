@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Rainbow Palace</title>
@@ -18,16 +18,8 @@
   --font-body:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
   --font-mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
 }
-@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
-  --paper:#101617; --sheet:#162022; --ink:#E2E8E6; --muted:#97A7AA; --rule:#2A3638; --rule-strong:#475759;
-  --cedar:#E0906B; --cedar-soft:#3A2419; --flag:#FF8A4A; --steel:#93ACB9; --ok:#86CC93; --ok-soft:#1D3323;
-  --wood-fill:#8E6545; --wood-end:#6F4B31; --wood-peeled:#A98762; --wood-line:#E0BC98; --oak:#B89766;
-  --concrete:#5E6261; --metal:#6E838E; --fw:#7C6448; --gear:#5D5850; --sky:#1A2528; color-scheme:dark; } }
-:root[data-theme="dark"] {
-  --paper:#101617; --sheet:#162022; --ink:#E2E8E6; --muted:#97A7AA; --rule:#2A3638; --rule-strong:#475759;
-  --cedar:#E0906B; --cedar-soft:#3A2419; --flag:#FF8A4A; --steel:#93ACB9; --ok:#86CC93; --ok-soft:#1D3323;
-  --wood-fill:#8E6545; --wood-end:#6F4B31; --wood-peeled:#A98762; --wood-line:#E0BC98; --oak:#B89766;
-  --concrete:#5E6261; --metal:#6E838E; --fw:#7C6448; --gear:#5D5850; --sky:#1A2528; color-scheme:dark; }
+
+
 
 * { box-sizing:border-box; }
 :root { padding-top:env(safe-area-inset-top, 0px); padding-bottom:env(safe-area-inset-bottom, 0px); }
@@ -193,9 +185,7 @@ figcaption::before { content:counter(fig, upper-alpha); font:500 11px var(--font
 figcaption::after { content:"NTS"; margin-left:auto; font:500 11px var(--font-mono); color:var(--muted); letter-spacing:.1em; }
 
 /* ---- presentation-deck styling ---- */
-:root:not([data-theme="dark"]) { --paper:#FDFDFB; --sheet:#FFFFFF; }
-@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --paper:#121516; --sheet:#181C1D; } }
-:root[data-theme="dark"] { --paper:#121516; --sheet:#181C1D; }
+:root, :root[data-theme] { --paper:#FDFDFB; --sheet:#FFFFFF; color-scheme:light; }
 .wrap { gap:64px; padding-block:48px 72px; }
 .hd { padding-bottom:18px; border-bottom:1px solid var(--ink); }
 h1 { font:300 clamp(2.4rem, 7vw, 4.6rem)/1 var(--font-display); letter-spacing:.03em; }
