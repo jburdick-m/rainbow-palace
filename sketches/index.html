@@ -1075,7 +1075,7 @@ const MODEL = {"params":{"bay":8.0,"n_bays":3,"depth":16.0,"n_trusses":3,"pier_a
     shop: { pos: [3, 5.6, 27], tgt: [-1, 5.0, -2], fov: 44, shift: 0.05, sun: [0.5, 0.95, 0.85], fade: [0, 0, 40, 80], vig: [0.5, 0.5, 0.62, 1.0] },
     gable: { pos: [7, 12.5, 30], tgt: [0, 14.6, 8], fov: 34, shift: 0.0, sun: [0.6, 0.9, 0.85], fade: [0, 4, 34, 64], vig: [0.5, 0.52, 0.56, 0.95] },
     firewood: { pos: [58, 9.5, 38], tgt: [17, 3.6, 3], fov: 40, shift: 0.04, sun: [0.75, 0.95, 0.6], fade: [22, 8, 46, 90], vig: [0.5, 0.5, 0.56, 0.92] },
-    storm: { pos: [-84, 8, 50], tgt: [-24, 3.5, 2], fov: 38, shift: 0.08, sun: [-0.7, 0.95, 0.55], fade: [-30, 6, 55, 100], vig: [0.5, 0.5, 0.34, 0.5], vigA: 0.556 },
+    storm: { pos: [-84, 8, 50], tgt: [-24, 3.5, 2], fov: 38, shift: 0.08, sun: [-0.7, 0.95, 0.55], fade: [-30, 6, 55, 100], vig: [0.5, 0.5, 0.34, 0.5], vigA: 0.556, doors: 'closed' },
     back: { pos: [-22, 7.5, -55], tgt: [0, 4.6, -11], fov: 40, shift: 0.1, clearR: 20, sun: [-0.4, 0.95, -0.75], fade: [0, -8, 52, 100], vig: [0.5, 0.5, 0.33, 0.5], vigA: 0.667 },
     frame: { pos: [-44, 16, 50], tgt: [0, 7.5, -1], fov: 36, shift: 0.05, sun: [0.75, 0.95, 0.7], fade: [0, 0, 45, 80], vig: [0.5, 0.5, 0.35, 0.52], vigA: 0.667, hide: ['roof', 'siding', 'wood', 'gear', 'vehicles', 'site'] },
     clearing: { pos: [72, 78, 118], tgt: [8, 0, 4], fov: 40, shift: 0, sun: [0.62, 0.9, 0.78], fade: [30, 10, 160, 260], vig: [0.5, 0.5, 0.6, 0.98], far: true },
@@ -1136,6 +1136,7 @@ const MODEL = {"params":{"bay":8.0,"n_bays":3,"depth":16.0,"n_trusses":3,"pier_a
       setHidden(s.hide || []); setSun(s.sun, s.tgt[0], s.tgt[2], s.far ? 300 : 75);
       CU.uFade.value.set(s.fade[0], s.fade[1], s.fade[2], s.fade[3]); CU.uVig.value.set(s.vig[0], s.vig[1], s.vig[2], s.vig[3]); CU.uVigA.value = s.vigA || 1; CU.uEdgeG.value = s.vigA ? 1 : 0;
       if (name === 'frame') { CU.uWashK.value = 0.6; }
+      Object.values(pivots).forEach(pv => { pv.rotation.y = s.doors === 'closed' ? 0 : pv.userData.psi; });
       U.uDabK.value = s.far ? 1.7 : 1.0; CU.uGShade.value = s.far ? 0.3 : 0.8; trunksFor(!!s.far, s.clearR ? [s.pos[0], s.pos[2], s.clearR] : null); renderer.shadowMap.needsUpdate = true;
       U.uClip.value.set(0, 1, 0, 1e6); renderer.clippingPlanes = [];
       labelSvg.innerHTML = '';
