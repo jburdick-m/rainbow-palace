@@ -6,31 +6,28 @@
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@600;800&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
 <style>
 /* Layout: a drawing set. Title block, then the live model, then generated drawings, details (joints) and schedules. */
 :root {
-  --paper:#E4E1D8; --sheet:#F7F5EE; --ink:#23221F; --muted:#6B675E; --rule:#D6D1C4; --rule-strong:#A19B8C;
-  --cedar:#9C3D1E; --cedar-soft:#F0E0D4; --flag:#C4510F; --steel:#4F6573; --ok:#2E6A3A; --ok-soft:#DFEADB;
-  --wood-fill:#D4AE86; --wood-end:#B3825A; --wood-peeled:#E9D3B2; --wood-line:#5E3A24; --oak:#E2C79A;
-  --concrete:#CFCCC2; --metal:#A3AEB3; --fw:#DCC09A; --gear:#BEB7AA; --sky:#E1E4E0;
-  --grid:rgba(35,34,31,.045); --frame:#23221F;
-  --font-display:"Barlow Condensed","Arial Narrow",sans-serif;
+  --paper:#EEF1EE; --sheet:#F8FAF8; --ink:#1C2A2E; --muted:#56676B; --rule:#C8D1CE; --rule-strong:#93A2A1;
+  --cedar:#8B3A1D; --cedar-soft:#F1E1D8; --flag:#C9520C; --steel:#5C7482; --ok:#2E6A3A; --ok-soft:#DDEBDF;
+  --wood-fill:#CFA47C; --wood-end:#AE7A4E; --wood-peeled:#E6CBA6; --wood-line:#6B4127; --oak:#E2C79A;
+  --concrete:#C9C8C1; --metal:#9AAAB2; --fw:#D8B98F; --gear:#B9B2A6; --sky:#DCE5E8;
+  --font-display:"Big Shoulders Display","Arial Narrow",Impact,sans-serif;
   --font-body:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
   --font-mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
 }
 @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
-  --paper:#0A1E36; --sheet:#0F2B4D; --ink:#E9F1FB; --muted:#A3BBD6; --rule:#28497A; --rule-strong:#4E74A6;
-  --cedar:#FFC782; --cedar-soft:#22416B; --flag:#FFB25E; --steel:#B9D3EE; --ok:#9FE0AA; --ok-soft:#183E3A;
-  --wood-fill:#2F5582; --wood-end:#3E6896; --wood-peeled:#36608F; --wood-line:#E9F1FB; --oak:#4A73A3;
-  --concrete:#2A4C78; --metal:#3B6190; --fw:#2C5384; --gear:#284A74; --sky:#12335A;
-  --grid:rgba(233,241,251,.07); --frame:#E9F1FB; color-scheme:dark; } }
+  --paper:#101617; --sheet:#162022; --ink:#E2E8E6; --muted:#97A7AA; --rule:#2A3638; --rule-strong:#475759;
+  --cedar:#E0906B; --cedar-soft:#3A2419; --flag:#FF8A4A; --steel:#93ACB9; --ok:#86CC93; --ok-soft:#1D3323;
+  --wood-fill:#8E6545; --wood-end:#6F4B31; --wood-peeled:#A98762; --wood-line:#E0BC98; --oak:#B89766;
+  --concrete:#5E6261; --metal:#6E838E; --fw:#7C6448; --gear:#5D5850; --sky:#1A2528; color-scheme:dark; } }
 :root[data-theme="dark"] {
-  --paper:#0A1E36; --sheet:#0F2B4D; --ink:#E9F1FB; --muted:#A3BBD6; --rule:#28497A; --rule-strong:#4E74A6;
-  --cedar:#FFC782; --cedar-soft:#22416B; --flag:#FFB25E; --steel:#B9D3EE; --ok:#9FE0AA; --ok-soft:#183E3A;
-  --wood-fill:#2F5582; --wood-end:#3E6896; --wood-peeled:#36608F; --wood-line:#E9F1FB; --oak:#4A73A3;
-  --concrete:#2A4C78; --metal:#3B6190; --fw:#2C5384; --gear:#284A74; --sky:#12335A;
-  --grid:rgba(233,241,251,.07); --frame:#E9F1FB; color-scheme:dark; }
+  --paper:#101617; --sheet:#162022; --ink:#E2E8E6; --muted:#97A7AA; --rule:#2A3638; --rule-strong:#475759;
+  --cedar:#E0906B; --cedar-soft:#3A2419; --flag:#FF8A4A; --steel:#93ACB9; --ok:#86CC93; --ok-soft:#1D3323;
+  --wood-fill:#8E6545; --wood-end:#6F4B31; --wood-peeled:#A98762; --wood-line:#E0BC98; --oak:#B89766;
+  --concrete:#5E6261; --metal:#6E838E; --fw:#7C6448; --gear:#5D5850; --sky:#1A2528; color-scheme:dark; }
 
 * { box-sizing:border-box; }
 :root { padding-top:env(safe-area-inset-top, 0px); padding-bottom:env(safe-area-inset-bottom, 0px); }
@@ -187,49 +184,13 @@ ul.qs { margin:0; padding-left:20px; display:grid; gap:8px; max-width:860px; }
 .files code { background:var(--sheet); border:1px solid var(--rule); padding:1px 5px; border-radius:3px; }
 pre { margin:0; background:var(--sheet); border:1px solid var(--rule); padding:10px 12px; overflow-x:auto; font:13px var(--font-mono); }
 
-/* ---- architectural drawing-set skin ---- */
-body { background:var(--paper); }
-.wrap { margin:24px auto 32px; background-color:var(--sheet);
-  background-image:linear-gradient(var(--grid) 1px, transparent 1px), linear-gradient(90deg, var(--grid) 1px, transparent 1px);
-  background-size:24px 24px; border:2px solid var(--frame); outline:1px solid var(--frame); outline-offset:5px;
-  padding-block:32px 0; padding-left:max(22px, env(safe-area-inset-left, 0px)); padding-right:max(22px, env(safe-area-inset-right, 0px)); }
-@media (max-width:640px) { .wrap { margin:12px 8px 20px; outline-offset:3px; padding-left:14px; padding-right:14px; } }
-h1, h2, h3 { font-family:var(--font-display); text-transform:uppercase; letter-spacing:.07em; }
-h1 { font-weight:700; font-size:clamp(2.3rem, 6vw, 3.9rem); letter-spacing:.09em; }
-h2 { font-weight:600; font-size:clamp(1.45rem, 3.4vw, 1.9rem); }
-h3 { font-weight:600; letter-spacing:.06em; }
-.eyebrow, .tb-cell .k, th { letter-spacing:.14em; }
-.tb { border:2px solid var(--frame); background:transparent; }
-.tb-main { border-right:2px solid var(--frame); }
-.tb-main p { font-family:var(--font-mono); font-size:13.5px; text-transform:uppercase; letter-spacing:.06em; color:var(--muted); }
-.tb-cell { border-color:var(--rule-strong); }
-@media (max-width:760px) { .tb-main { border-bottom:2px solid var(--frame); } }
-.sec-head { display:flex; gap:14px; align-items:center; border-bottom:2px solid var(--frame); padding-bottom:10px; position:relative; }
-.sec-head::after { content:""; position:absolute; left:0; right:0; bottom:-6px; border-bottom:1px solid var(--frame); }
-.sec-ttl { display:grid; gap:4px; min-width:0; }
-.bubble { flex:none; width:58px; height:58px; border:2px solid var(--frame); border-radius:50%; display:grid; grid-template-rows:1fr 1fr; overflow:hidden;
-  font-family:var(--font-display); text-align:center; }
-.bubble b { font-weight:700; font-size:20px; line-height:28px; border-bottom:1.5px solid var(--frame); align-self:end; }
-.bubble i { font-style:normal; font:500 10.5px/24px var(--font-mono); letter-spacing:.04em; color:var(--muted); }
+/* quiet drafting touches */
+.sec-head { border-bottom:1px solid var(--rule-strong); padding-bottom:10px; }
 .figs { counter-reset:fig; }
 figure { counter-increment:fig; }
-figcaption { display:flex; align-items:center; gap:10px; border-bottom:2px solid var(--frame); padding:6px 0 6px; max-width:none; }
-figcaption::before { content:counter(fig); flex:none; width:30px; height:30px; border:1.5px solid var(--frame); border-radius:50%; display:grid; place-items:center;
-  font:700 15px/1 var(--font-display); color:var(--ink); }
-figcaption b { font:600 17px/1 var(--font-display); text-transform:uppercase; letter-spacing:.09em; }
-figcaption::after { content:"Scale: NTS"; margin-left:auto; font:500 11px var(--font-mono); letter-spacing:.12em; text-transform:uppercase; color:var(--muted); }
-.fig-scroll, .tbl, .viewer, .stock div { border-color:var(--frame); }
-.fig-scroll, .tbl { background:var(--sheet); }
-.btn, .chip-t span { border-radius:0; font:500 11.5px/1 var(--font-mono); letter-spacing:.08em; text-transform:uppercase; }
-.chip-t span { padding:8px 10px; }
-.btn { padding:8px 10px; }
-.note { font-family:var(--font-mono); font-size:12.5px; }
-.sheet-foot { display:grid; grid-template-columns:minmax(0,2fr) repeat(3, minmax(0,1fr)); border-top:2px solid var(--frame); margin:0 calc(-1 * max(22px, env(safe-area-inset-left, 0px))); }
-.sheet-foot > div { padding:10px 14px; border-left:1px solid var(--frame); display:grid; gap:2px; min-width:0; }
-.sheet-foot > div:first-child { border-left:0; }
-.sheet-foot .k { font:500 10.5px/1.2 var(--font-mono); letter-spacing:.14em; text-transform:uppercase; color:var(--muted); }
-.sheet-foot .v { font:600 16px/1.2 var(--font-display); letter-spacing:.08em; text-transform:uppercase; }
-@media (max-width:640px) { .sheet-foot { grid-template-columns:1fr 1fr; margin:0 -14px; } .sheet-foot > div:nth-child(3) { border-left:0; } .sheet-foot > div { border-top:1px solid var(--frame); } }
+figcaption { display:flex; align-items:baseline; gap:10px; max-width:none; }
+figcaption::before { content:counter(fig, decimal-leading-zero); font:500 11px var(--font-mono); color:var(--muted); letter-spacing:.06em; }
+figcaption::after { content:"NTS"; margin-left:auto; font:500 11px var(--font-mono); color:var(--muted); letter-spacing:.1em; }
 @media (prefers-reduced-motion: reduce) { * { scroll-behavior:auto !important; } }
 </style>
 
@@ -239,7 +200,7 @@ figcaption::after { content:"Scale: NTS"; margin-left:auto; font:500 11px var(--
   <div class="tb-main">
     <div class="eyebrow">Plans · <span data-k="date"></span></div>
     <h1>Rainbow Palace</h1>
-    <p>A round-log truss shed built from nearby cedar.</p>
+    <p>Round whole-log truss pole barn built from nearby cedar.</p>
   </div>
   <div class="tb-grid">
     <div class="tb-cell"><span class="k">Footprint</span><span class="v" data-k="footprint"></span></div>
@@ -287,9 +248,7 @@ figcaption::after { content:"Scale: NTS"; margin-left:auto; font:500 11px var(--
 
 <section class="sec" id="drawings" aria-labelledby="h-dr">
   <div class="sec-head">
-    <span class="bubble" aria-hidden="true"><b>1</b><i>A-101</i></span>
-    <div class="sec-ttl">
-    <h2 id="h-dr">Plan, elevation and section</h2></div>
+    <h2 id="h-dr">Plan, elevation and section</h2>
   </div>
   <div class="figs">
     <figure>
@@ -311,28 +270,19 @@ figcaption::after { content:"Scale: NTS"; margin-left:auto; font:500 11px var(--
 
 <section class="sec" id="cutlist" aria-labelledby="h-c">
   <div class="sec-head">
-    <span class="bubble" aria-hidden="true"><b>2</b><i>S-201</i></span>
-    <div class="sec-ttl"><div class="eyebrow">Wood</div>
-    <h2 id="h-c">Trees and logs</h2></div>
+    <div class="eyebrow">Wood</div>
+    <h2 id="h-c">Trees and logs</h2>
   </div>
   <div class="tbl"><table id="t-trees"></table></div>
   <div class="tbl"><table id="t-cut"></table></div>
 </section>
 <section class="sec" id="buy" aria-labelledby="h-b">
   <div class="sec-head">
-    <span class="bubble" aria-hidden="true"><b>3</b><i>S-301</i></span>
-    <div class="sec-ttl"><h2 id="h-b">Purchased materials</h2></div>
+    <h2 id="h-b">Purchased materials</h2>
   </div>
   <div class="tbl"><table id="t-buy"></table></div>
   <p class="note">Rough 2026 prices. Oak pegs (<span data-k="pegs"></span>) come from spare oak slabs.</p>
 </section>
-
-<footer class="sheet-foot" aria-label="Sheet title">
-  <div><span class="k">Project</span><span class="v">Rainbow Palace · round-log truss shed</span></div>
-  <div><span class="k">Date</span><span class="v" data-k="date"></span></div>
-  <div><span class="k">Scale</span><span class="v">NTS</span></div>
-  <div><span class="k">Sheet</span><span class="v">A-001</span></div>
-</footer>
 
 
 
