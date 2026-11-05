@@ -50,16 +50,11 @@ code, .mono { font-family:var(--font-mono); font-size:.9em; }
 @media (max-width:760px) { .tb { grid-template-columns:1fr; } .tb-main { border-right:0; border-bottom:1.5px solid var(--ink); } }
 
 /* model */
-.viewer { display:grid; grid-template-columns:minmax(0,1fr) 300px; border:1px solid var(--rule-strong); background:var(--sheet); }
+.viewer { border:1px solid var(--rule-strong); background:var(--sheet); }
 .cvwrap { position:relative; height:560px; min-width:0; }
 #cv { display:block; width:100%; height:100%; touch-action:none; cursor:grab; }
 #cv:active { cursor:grabbing; }
 .cvhint { position:absolute; left:12px; bottom:10px; font:12px var(--font-mono); color:var(--ink); background:color-mix(in srgb, var(--sheet) 82%, transparent); padding:3px 8px; border-radius:3px; pointer-events:none; }
-.info { border-left:1px solid var(--rule-strong); padding:16px; display:grid; gap:12px; align-content:start; min-width:0; overflow:auto; max-height:560px; }
-.info h3 { font-size:1.6rem; }
-.info dl { display:grid; grid-template-columns:auto 1fr; gap:4px 12px; margin:0; font-size:14px; }
-.info dt { color:var(--muted); font:500 12px/1.7 var(--font-mono); }
-.info dd { margin:0; font-variant-numeric:tabular-nums; }
 .toolbar { display:flex; flex-wrap:wrap; gap:10px 22px; align-items:center; }
 .tgroup { display:flex; flex-wrap:wrap; gap:6px; align-items:center; }
 .tgroup .eyebrow { margin-right:4px; }
@@ -72,11 +67,7 @@ code, .mono { font-family:var(--font-mono); font-size:.9em; }
 .btn:hover { border-color:var(--ink); }
 .btn:focus-visible { outline:2px solid var(--flag); outline-offset:2px; }
 .btn.on { border-color:var(--flag); color:var(--flag); }
-@media (max-width:860px) { .viewer { grid-template-columns:1fr; } .cvwrap { height:420px; } .info { border-left:0; border-top:1px solid var(--rule-strong); max-height:none; } }
-
-.jchips { display:flex; flex-wrap:wrap; gap:6px; }
-.jchip { font:500 12px/1 var(--font-mono); padding:6px 8px; border:1px solid var(--cedar); color:var(--cedar); border-radius:3px; text-decoration:none; background:transparent; cursor:pointer; }
-.jchip:hover { background:var(--cedar-soft); }
+@media (max-width:860px) { .cvwrap { height:420px; } }
 
 /* drawings */
 .figs { display:grid; gap:28px; }
@@ -106,8 +97,6 @@ figcaption b { color:var(--ink); font-weight:600; }
 .a-tl { font:600 13px var(--font-body); fill:var(--ink); }
 .a-tag circle { fill:var(--sheet); stroke:var(--cedar); stroke-width:1.2; }
 .a-tag text { font:500 10.5px var(--font-mono); fill:var(--cedar); }
-.a-tag { cursor:pointer; }
-.a-tag:hover circle { fill:var(--cedar-soft); }
 .a-ar { stroke:var(--steel); stroke-width:1.6; fill:none; }
 .a-arh { fill:var(--steel); }
 
@@ -154,9 +143,6 @@ table { border-collapse:collapse; width:100%; font-size:14px; }
 th { text-align:left; font:500 11px/1.3 var(--font-mono); letter-spacing:.05em; text-transform:uppercase; color:var(--muted); padding:10px 12px; border-bottom:1.5px solid var(--ink); white-space:nowrap; }
 td { padding:9px 12px; border-bottom:1px solid var(--rule); vertical-align:top; font-variant-numeric:tabular-nums; }
 td.n, th.n { text-align:right; }
-tbody tr.click { cursor:pointer; }
-tbody tr.click:hover td { background:var(--cedar-soft); }
-tbody tr.sel td { background:var(--cedar-soft); }
 tfoot td { font-weight:600; border-bottom:0; border-top:1.5px solid var(--ink); }
 .marks { font:12px var(--font-mono); color:var(--muted); max-width:320px; }
 .pill { font:500 11px/1 var(--font-mono); padding:4px 7px; border-radius:999px; background:var(--ok-soft); color:var(--ok); white-space:nowrap; }
@@ -194,17 +180,12 @@ body { background-color:var(--paper); background-image:radial-gradient(circle, r
 .sites span { color:var(--ink); border-bottom-color:var(--ink); }
 h1 { font:300 clamp(2.4rem, 7vw, 4.6rem)/1 var(--font-display); letter-spacing:.03em; }
 h2 { font:400 clamp(1.4rem, 3vw, 1.85rem)/1.1 var(--font-display); letter-spacing:.02em; }
-h3, .info h3 { font:400 1.35rem/1.15 var(--font-display); letter-spacing:.01em; }
-.eyebrow, th, .info dt { font-family:var(--font-display); font-weight:500; letter-spacing:.16em; }
+h3 { font:400 1.35rem/1.15 var(--font-display); letter-spacing:.01em; }
+.eyebrow, th { font-family:var(--font-display); font-weight:500; letter-spacing:.16em; }
 .sec-head { border-bottom:1px solid var(--rule-strong); padding-bottom:10px; }
 main, .wrap { counter-reset:sec fig; }
 .sec-head h2::before { counter-increment:sec; content:counter(sec, decimal-leading-zero); font:400 .62em var(--font-display); letter-spacing:.12em; color:var(--muted); margin-right:14px; vertical-align:.25em; }
-/* model: selection pane sits under the view at every width */
-.viewer { grid-template-columns:minmax(0,1fr); border-color:var(--rule); }
-.info { border-left:0; border-top:1px solid var(--rule); max-height:none; display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1.4fr); gap:6px 32px; align-items:start; padding:18px 20px; }
-.info > * { grid-column:1; }
-.info > dl { grid-column:2; grid-row:1 / span 6; grid-template-columns:repeat(auto-fill, minmax(150px, auto) minmax(90px, 1fr)); }
-@media (max-width:700px) { .info { grid-template-columns:minmax(0,1fr); } .info > dl { grid-column:1; grid-row:auto; grid-template-columns:auto 1fr; } }
+.viewer { border-color:var(--rule); }
 /* toolbar: quiet text controls instead of chips */
 .toolbar { gap:10px 28px; }
 .chip-t span, .btn { font:500 11.5px/1 var(--font-display); letter-spacing:.14em; text-transform:uppercase; border-radius:0; }
@@ -261,12 +242,12 @@ figcaption b { font:400 14px var(--font-display); letter-spacing:.08em; text-tra
       <button class="btn" data-view="top">Top</button>
       <button class="btn" data-view="frame">Frame only</button>
       <button class="btn" data-view="site">Whole site</button>
+      <button class="btn" id="freeBtn" aria-pressed="false" aria-label="Free pan: drag to move around the site, scroll or pinch to zoom">Free pan</button>
       <button class="btn" id="doorsBtn">Close doors</button>
     </div>
   </div>
   <div class="viewer">
     <div class="cvwrap" id="cvwrap"><canvas id="cv" aria-label="3D model of the woodshed. Use the buttons to change views."></canvas><div class="cvhint" id="cvhint" hidden></div></div>
-    <aside class="info" id="info" aria-live="polite"></aside>
   </div>
 </section>
 
@@ -502,13 +483,12 @@ const MODEL = {"params":{"bay":8.0,"n_bays":3,"depth":16.0,"n_trusses":3,"pier_a
     .map(([k, t, u]) => k === cur ? `<span aria-current="page">${t}</span>` : `<a href="${u}">${t}</a>`).join('');
 })();
 (function () {
-  if (!MODEL) { document.getElementById('info').textContent = 'Model data is missing. Run model.py to build this page.'; return; }
+  if (!MODEL) { document.getElementById('cvwrap').innerHTML = '<p style="padding:16px">Model data is missing. Run model.py to build this page.</p>'; return; }
   const M = MODEL, S = M.summary, P = M.params;
   const byId = {}; M.members.forEach(m => { byId[m.id] = m; });
   const LT = S.leantos;
 
   const fmtFt = ft => { let t = Math.round(ft * 12); const f = Math.floor(t / 12), i = t % 12; return (f ? f + '′' : '') + (i || !f ? (f ? ' ' : '') + i + '″' : ''); };
-  const fmtIn = ft => { const v = Math.round(ft * 24) / 2; return v + '″'; };
   const fmt8 = ft => { const e = Math.round(ft * 96); const f = Math.floor(e / 96), r = e - f * 96; const i = Math.floor(r / 8), fr = r % 8; const fr8 = ['', '⅛', '¼', '⅜', '½', '⅝', '¾', '⅞'][fr]; return f + '′ ' + i + fr8 + '″'; };
   const money = n => '$' + n.toLocaleString('en-US');
   const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
@@ -538,11 +518,10 @@ const MODEL = {"params":{"bay":8.0,"n_bays":3,"depth":16.0,"n_trusses":3,"pier_a
 
   // ---------- 3D viewer
   const T = window.THREE;
-  const cv = document.getElementById('cv'), wrap = document.getElementById('cvwrap'), info = document.getElementById('info');
+  const cv = document.getElementById('cv'), wrap = document.getElementById('cvwrap');
+  const C0 = (M.page && M.page.center) || [0, 0, 0];   // where the barn sits in the site frame (its own drawings are relative to this)
   let render = () => {};
-  const meshes = {}; const pickables = [];
-  let selectIds = () => {};
-  let focusOn = () => {};
+  const meshes = {};
   let siteH = () => 0, swingDoors = () => true, MAXR = 160;
   if (T) {
     const SITE = M.site || null;
@@ -617,7 +596,6 @@ const MODEL = {"params":{"bay":8.0,"n_bays":3,"depth":16.0,"n_trusses":3,"pier_a
     const ribMat = STD({ color: 0x9aa3a9, roughness: 0.45, metalness: 0.35 });
     const lampMat = STD({ color: 0xffffff, emissive: 0xfff6dd, emissiveIntensity: 0.8 });
     const edgeMat = new T.LineBasicMaterial({ color: 0x24160d, transparent: true, opacity: 0.6 });
-    const HI = new T.MeshLambertMaterial({ color: 0xff7a2e, emissive: 0x5a1c00 });
     const hash = s => { let h = 7; for (let i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) | 0; return Math.abs(h); };
     const colorFor = m => {
       if (m.mat && COL[m.mat] !== undefined) return Array.isArray(COL[m.mat]) ? COL[m.mat][hash(m.id) % 4] : COL[m.mat];
@@ -643,10 +621,10 @@ const MODEL = {"params":{"bay":8.0,"n_bays":3,"depth":16.0,"n_trusses":3,"pier_a
     const xCache = {};
     const xmat = c => xCache[c] || (xCache[c] = new T.MeshLambertMaterial({ color: c, transparent: true, opacity: 0.2, depthWrite: false }));
     const add = (m, mesh, parent) => {
-      mesh.userData.id = m.id; mesh.userData.base = mesh.material; mesh.userData.solid = mesh.material; mesh.userData.wood = isWood(m);
+      mesh.userData.solid = mesh.material; mesh.userData.wood = isWood(m);
       mesh.userData.color = Array.isArray(mesh.material) ? colorFor(m) : mesh.material.color.getHex();
       mesh.castShadow = true; mesh.receiveShadow = true;
-      (meshes[m.id] = meshes[m.id] || []).push(mesh); (parent || scene).add(mesh); pickables.push(mesh);
+      (meshes[m.id] = meshes[m.id] || []).push(mesh); (parent || scene).add(mesh);
     };
     // firewood: every row is filled with individual 16 in splits (instanced), end grain out, bark on the sides
     const SPLIT = [];
@@ -739,7 +717,7 @@ const MODEL = {"params":{"bay":8.0,"n_bays":3,"depth":16.0,"n_trusses":3,"pier_a
           }
         }
         const mesh = new T.Mesh(g, mats);
-        const eg = new T.LineSegments(new T.EdgesGeometry(g, 30), edgeMat); eg.raycast = () => {}; mesh.add(eg);
+        mesh.add(new T.LineSegments(new T.EdgesGeometry(g, 30), edgeMat));
         add(m, mesh);
         return;
       }
@@ -779,8 +757,8 @@ const MODEL = {"params":{"bay":8.0,"n_bays":3,"depth":16.0,"n_trusses":3,"pier_a
         }
         mesh.position.set(m.c[0], m.c[1], m.c[2]); mesh.rotation.set(m.r[0], m.r[1], m.r[2]);
         if (m.role === 'metal') {
-          if (Math.abs(m.r[0]) > 1e-6) { for (let x = -sx / 2 + 0.375; x < sx / 2; x += 0.75) { const r = new T.Mesh(new T.BoxGeometry(0.07, 0.07, sz), ribMat); r.position.set(x, sy / 2 + 0.02, 0); r.userData.id = m.id; r.castShadow = true; mesh.add(r); } }
-          else { for (let z = -sz / 2 + 0.375; z < sz / 2; z += 0.75) { const r = new T.Mesh(new T.BoxGeometry(sx, 0.07, 0.07), ribMat); r.position.set(0, sy / 2 + 0.02, z); r.userData.id = m.id; r.castShadow = true; mesh.add(r); } }
+          if (Math.abs(m.r[0]) > 1e-6) { for (let x = -sx / 2 + 0.375; x < sx / 2; x += 0.75) { const r = new T.Mesh(new T.BoxGeometry(0.07, 0.07, sz), ribMat); r.position.set(x, sy / 2 + 0.02, 0); r.castShadow = true; mesh.add(r); } }
+          else { for (let z = -sz / 2 + 0.375; z < sz / 2; z += 0.75) { const r = new T.Mesh(new T.BoxGeometry(sx, 0.07, 0.07), ribMat); r.position.set(0, sy / 2 + 0.02, z); r.castShadow = true; mesh.add(r); } }
         }
         add(m, mesh);
       }
@@ -798,14 +776,89 @@ const MODEL = {"params":{"bay":8.0,"n_bays":3,"depth":16.0,"n_trusses":3,"pier_a
       return doorsOpen;
     };
 
+    // ---------- see-through trees: trunks, limbs and foliage that stand between the camera and what it looks at (a cone
+    // from the lens to the subject), or close to the lens, turn ~30% opaque. The tree materials skip those fragments, and
+    // the trees that reach into the zone are drawn once more just for them: a depth pass, then a single blended layer.
+    // That reads as real transparency, needs no sorting, and stacked leaves don't build back up to solid.
+    const SEE_P = { value: new T.Vector3(0, 0, -60) };   // the subject, in view space (updated every frame)
+    const SEE = { value: new T.Vector2(26, 18) };          // subject radius, near-zone radius (ft)
+    const SEE_GLSL = `uniform vec3 uSeeP; uniform vec2 uSee; varying vec3 vSeeV;
+float seeAlpha() {
+  float d = length(vSeeV), sd = max(length(uSeeP), 1.0);
+  vec3 sdir = uSeeP / sd;
+  float t = dot(vSeeV, sdir);                                   // distance along the line of sight to the subject
+  float lat = length(vSeeV - sdir * t) * sd / max(t, 0.5);      // off that line, scaled out to the subject's distance
+  float zone = (1.0 - smoothstep(uSee.x, uSee.x * 1.45, lat)) * (1.0 - smoothstep(sd - uSee.x * 0.2, sd + uSee.x * 0.3, t));
+  float nearF = 1.0 - smoothstep(uSee.y * 0.5, uSee.y, d);
+  return mix(1.0, 0.3, max(zone, nearF)) * smoothstep(uSee.y * 0.2, uSee.y * 0.45, d);   // and gone right at the lens
+}
+`;
+    // pass 0: the tree as usual, minus the see-through part; 1: depth of that part (not the wisps fading out at the lens);
+    // 2: its colour, blended over the scene: the nearest veil layer, plus any wisps in front of it
+    const SEE_CUT = ['seeA < 0.999', 'seeA >= 0.999 || seeA < 0.25', 'seeA >= 0.999 || seeA < 0.004'];
+    const seeThrough = (m, pass = 0) => {
+      if (pass === 1) Object.assign(m, { transparent: true, blending: T.NoBlending, colorWrite: false });
+      if (pass === 2) Object.assign(m, { transparent: true, depthWrite: false });
+      m.customProgramCacheKey = () => 'see' + pass;
+      m.onBeforeCompile = sh => {
+        sh.uniforms.uSeeP = SEE_P; sh.uniforms.uSee = SEE;
+        sh.vertexShader = 'invariant gl_Position;\nvarying vec3 vSeeV;\n' + sh.vertexShader.replace('#include <project_vertex>', '#include <project_vertex>\n  vSeeV = mvPosition.xyz;');
+        sh.fragmentShader = SEE_GLSL + sh.fragmentShader
+          .replace('void main() {', `void main() {\n  float seeA = seeAlpha();\n  if (${SEE_CUT[pass]}) discard;`)
+          .replace('#include <dithering_fragment>', '#include <dithering_fragment>\n  gl_FragColor.a = seeA;');
+      };
+      return m;
+    };
+    const see3 = base => [0, 1, 2].map(p => seeThrough(base.clone(), p));
+    // passes 1 and 2 only draw what can reach into the zone: instanced foliage, cores and limbs are binned into 12 ft
+    // cells (bounding spheres from the instance matrices), trunks go one by one; each frame the cells and trunks that
+    // touch the cone or the near sphere are copied into the extra passes
+    const ghostIMs = [], trunkGhosts = [];
+    const ghostIM = (im, mats) => {
+      const A = im.instanceMatrix.array, cells = new Map(), P = im.geometry.attributes.position;
+      let g0 = 0; for (let i = 0; i < P.count; i++) g0 = Math.max(g0, Math.hypot(P.getX(i), P.getY(i), P.getZ(i)));   // the shape's reach from its origin
+      for (let k = 0; k < im.count; k++) {
+        const o = k * 16, x = A[o + 12], y = A[o + 13], z = A[o + 14];
+        const r = g0 * Math.max(Math.hypot(A[o], A[o + 1], A[o + 2]), Math.hypot(A[o + 4], A[o + 5], A[o + 6]), Math.hypot(A[o + 8], A[o + 9], A[o + 10]));
+        const key = Math.floor(x / 12) + ',' + Math.floor(y / 12) + ',' + Math.floor(z / 12);
+        let c = cells.get(key); if (!c) cells.set(key, c = { ks: [], b: [1e9, 1e9, 1e9, -1e9, -1e9, -1e9] });
+        c.ks.push(k); const b = c.b;
+        b[0] = Math.min(b[0], x - r); b[1] = Math.min(b[1], y - r); b[2] = Math.min(b[2], z - r); b[3] = Math.max(b[3], x + r); b[4] = Math.max(b[4], y + r); b[5] = Math.max(b[5], z + r);
+      }
+      const list = [...cells.values()].map(({ ks, b }) => ({ ks, s: [(b[0] + b[3]) / 2, (b[1] + b[4]) / 2, (b[2] + b[5]) / 2, Math.hypot(b[3] - b[0], b[4] - b[1], b[5] - b[2]) / 2] }));
+      const gm = new T.InstancedBufferAttribute(new Float32Array(im.count * 16), 16).setUsage(T.DynamicDrawUsage);
+      const gc = new T.InstancedBufferAttribute(new Float32Array(im.count * 3), 3).setUsage(T.DynamicDrawUsage);
+      const passes = [1, 2].map(p => { const g = new T.InstancedMesh(im.geometry, mats[p], 1); g.instanceMatrix = gm; g.instanceColor = gc; g.count = 0; g.visible = false; g.renderOrder = p; g.receiveShadow = true; im.parent.add(g); return g; });
+      ghostIMs.push({ im, list, gm, gc, passes, sig: -1 });
+    };
+    const dirV = new T.Vector3();
+    const updateGhosts = subj => {
+      const cp = camera.position, sd = Math.max(1, cp.distanceTo(subj)), Rs = SEE.value.x, N = SEE.value.y;
+      dirV.subVectors(subj, cp).divideScalar(sd);
+      const inZone = s => {   // a bounding sphere against the near sphere and the cone toward the subject
+        const cx = s[0] - cp.x, cy = s[1] - cp.y, cz = s[2] - cp.z, R = s[3] + 1, d2 = cx * cx + cy * cy + cz * cz;
+        const along = cx * dirV.x + cy * dirV.y + cz * dirV.z, lat = Math.sqrt(Math.max(0, d2 - along * along));
+        return d2 < (N + R) * (N + R) || (along > -R && along < sd + 0.3 * Rs + R && lat < Rs * 1.45 * Math.max(0, along + R) / sd + R);
+      };
+      ghostIMs.forEach(G => {
+        const hit = []; let sig = 0;
+        G.list.forEach((c, i) => { if (inZone(c.s)) { hit.push(c); sig = (sig * 31 + i + 1) % 2147483647; } });
+        sig = sig * 4096 + hit.length; if (sig === G.sig) return; G.sig = sig;
+        let n = 0; const M4 = G.im.instanceMatrix.array, C3 = G.im.instanceColor.array, gm = G.gm.array, gc = G.gc.array;
+        hit.forEach(c => c.ks.forEach(k => { gm.set(M4.subarray(k * 16, k * 16 + 16), n * 16); gc.set(C3.subarray(k * 3, k * 3 + 3), n * 3); n++; }));
+        G.gm.updateRange.count = n * 16; G.gc.updateRange.count = n * 3; G.gm.needsUpdate = true; G.gc.needsUpdate = true;
+        G.passes.forEach(g => { g.count = n; g.visible = n > 0; });
+      });
+      trunkGhosts.forEach(t => { const v = inZone(t.s); t.ms.forEach(g => { g.visible = v; }); });
+    };
     // ---------- site: real terrain and trees from the 2022 lidar, or a simple placeholder
     const site = new T.Group(); scene.add(site);
     const labels = new T.Group(); scene.add(labels);
     const mkLabels = () => render();
     const xSW = LT.SW.x_out, xNE = LT.NE.x_out;
     if (SITE) buildSite(); else {
-      const ground = new T.Mesh(new T.CircleGeometry(140, 56), mat(0x8a9868)); ground.rotation.x = -Math.PI / 2; ground.position.y = -0.06; ground.receiveShadow = true; site.add(ground);
-      const pad = new T.Mesh(new T.BoxGeometry(48, 0.04, 26), mat(0x9b8a6c)); pad.position.y = -0.03; pad.receiveShadow = true; site.add(pad);
+      const ground = new T.Mesh(new T.CircleGeometry(140, 56), mat(0x8a9868)); ground.rotation.x = -Math.PI / 2; ground.position.set(C0[0], -0.06, C0[2]); ground.receiveShadow = true; site.add(ground);
+      const pad = new T.Mesh(new T.BoxGeometry(48, 0.04, 26), mat(0x9b8a6c)); pad.position.set(C0[0], -0.03, C0[2]); pad.receiveShadow = true; site.add(pad);
     }
     function buildSite() {
       const nx = SITE.nx, nz = SITE.nz, cell = SITE.cell_ft, X0 = SITE.x0, Z0 = SITE.z0;
@@ -850,7 +903,7 @@ const MODEL = {"params":{"bay":8.0,"n_bays":3,"depth":16.0,"n_trusses":3,"pier_a
       const px = g.getImageData(0, 0, c.width, c.height).data, half = SITE.half_ft, R = prng(77), pts = [];
       for (let k = 0; k < 26000 && pts.length < 9000; k++) {
         const x = (R() * 2 - 1) * half * 0.995, z = (R() * 2 - 1) * half * 0.995;
-        if (Math.abs(x) < 29 && Math.abs(z) < 15) continue;
+        if (Math.abs(x - C0[0]) < 29 && Math.abs(z - C0[2]) < 15) continue;
         const i = Math.floor((x + half) / (2 * half) * c.width), j = Math.floor((z + half) / (2 * half) * c.height), o = 4 * (j * c.width + i);
         const r = px[o], gg = px[o + 1], b = px[o + 2];
         if (r > 120 && r > b + 18 && gg > b && r + gg + b > 380) pts.push([x, z, r, gg, b]);
@@ -877,23 +930,22 @@ const MODEL = {"params":{"bay":8.0,"n_bays":3,"depth":16.0,"n_trusses":3,"pier_a
       const clumps = [[], [], []], limbs = [];
       const FOL = { ponderosa: [0x3c5a2c, 0x34502a, 0x46632f], black_oak: [0x6d8a3b, 0x7a9443, 0x5f7d35], live_oak: [0x4c5f3c, 0x56683f, 0x44573a], shrub: [0x5d6b3e, 0x667542, 0x52603a], oak: [0x5f7a3a, 0x6a8540, 0x566f36] };
       const BARK = { ponderosa: 0xffffff, black_oak: 0x4a4440, live_oak: 0x7b766e, shrub: 0x6b4a3a, oak: 0x5a534c };
-      const trunkMat = {}; const tmat = sp => trunkMat[sp] || (trunkMat[sp] = sp === 'ponderosa' ? STD({ color: 0xffffff, map: pineBarkTex, bumpMap: pineBarkTex, bumpScale: 0.08 }) : STD({ color: BARK[sp] || 0x5a534c, map: barkTex, bumpMap: barkTex, bumpScale: 0.08 }));
+      const trunkMat = {}; const tmat = sp => trunkMat[sp] || (trunkMat[sp] = see3(sp === 'ponderosa' ? STD({ color: 0xffffff, map: pineBarkTex, bumpMap: pineBarkTex, bumpScale: 0.08 }) : STD({ color: BARK[sp] || 0x5a534c, map: barkTex, bumpMap: barkTex, bumpScale: 0.08 })));
       const col = new T.Color();
       const limb = (a, b, r, sp) => limbs.push([a, b, r, sp]);
       const clump = (p, s, sp, R, flat) => { const v = Math.floor(R() * 3); clumps[v].push([p, s, flat, (FOL[sp] || FOL.oak)[Math.floor(R() * 3)], 0.82 + R() * 0.3, sp]); };
-      const trunk = (t, sp, x, y, z, rBot, rTop, len) => {
+      const trunk = (sp, x, y, z, rBot, rTop, len) => {
         const g = new T.CylinderGeometry(rTop, rBot, len, 12, 3); const uv = g.attributes.uv; const cr = Math.max(1, Math.round(Math.PI * 2 * rBot / 1.6));
         for (let i = 0; i < 13 * 4; i++) uv.setXY(i, uv.getX(i) * cr, uv.getY(i) * len / 3);
-        const mesh = new T.Mesh(g, tmat(sp)); mesh.position.set(x, y + len / 2, z); mesh.castShadow = mesh.receiveShadow = true;
-        mesh.userData.tree = t; site.add(mesh); pickables.push(mesh);
-        const fl = new T.Mesh(new T.CylinderGeometry(rBot, rBot * 1.45, 1.4, 12), tmat(sp)); fl.position.set(x, y + 0.5, z); fl.castShadow = true; fl.userData.tree = t; site.add(fl); pickables.push(fl);
-      };
-      const nearCut = m => {   // foliage right at the lens dissolves (a dithered fade), so a crown never blinds the view
-        m.onBeforeCompile = sh => {
-          sh.vertexShader = 'varying float vNearD;\n' + sh.vertexShader.replace('#include <project_vertex>', '#include <project_vertex>\n  vNearD = -mvPosition.z;');
-          sh.fragmentShader = 'varying float vNearD;\n' + sh.fragmentShader.replace('void main() {', 'void main() {\n  if (vNearD < 26.0 && fract(sin(dot(floor(gl_FragCoord.xy), vec2(12.9898, 78.233))) * 43758.5453) > (vNearD - 12.0) / 14.0) discard;');
-        };
-        return m;
+        const fg = new T.CylinderGeometry(rBot, rBot * 1.45, 1.4, 12), ghosts = [];
+        [0, 1, 2].forEach(p => {
+          const mesh = new T.Mesh(g, tmat(sp)[p]); mesh.position.set(x, y + len / 2, z);
+          const fl = new T.Mesh(fg, tmat(sp)[p]); fl.position.set(x, y + 0.5, z);
+          if (p) [mesh, fl].forEach(o => { o.visible = false; o.renderOrder = p; o.receiveShadow = true; ghosts.push(o); });
+          else { mesh.castShadow = mesh.receiveShadow = true; fl.castShadow = true; }
+          site.add(mesh, fl);
+        });
+        trunkGhosts.push({ s: [x, y + len / 2, z, Math.hypot(len / 2, rBot * 1.5)], ms: ghosts });
       };
       const dirF = (t, a) => { const o = ((Math.floor((a + Math.PI) / (Math.PI / 4)) % 8) + 8) % 8, mR = t.r8.reduce((s, v) => s + v, 0) / 8; return Math.min(1.45, Math.max(0.6, t.r8[o] / Math.max(mR, 0.1))); };
       (SITE.trees || []).forEach(t => {
@@ -901,8 +953,7 @@ const MODEL = {"params":{"bay":8.0,"n_bays":3,"depth":16.0,"n_trusses":3,"pier_a
         const mR = Math.max(2.5, t.r8.reduce((s, v) => s + v, 0) / 8);
         if (sp === 'ponderosa') {
           const base = Math.min(Math.max(t.base, H * (H > 45 ? 0.42 : 0.25)), H * 0.75), dbh = Math.min(3.8, 0.35 + 0.021 * H);
-          t.dbh = dbh;
-          trunk(t, sp, x, y0 - 0.6, z, dbh / 2, 0.12, H * 0.97 + 0.6);
+          trunk(sp, x, y0 - 0.6, z, dbh / 2, 0.12, H * 0.97 + 0.6);
           const prof = (t.prof && t.prof.some(v => v > 0)) ? t.prof : [0.8, 1, 0.95, 0.8, 0.55, 0.3].map(v => v * mR);
           const rad = hgt => { const u = (hgt - base) / (H - base) * 6 - 0.5; const i = Math.max(0, Math.min(5, Math.floor(u))), f = Math.max(0, Math.min(1, u - i)); const r = prof[i] * (1 - f) + prof[Math.min(5, i + 1)] * f; return Math.max(1.2, r) * (hgt > H - 3 ? 0.5 : 1); };
           for (let hgt = base; hgt < H - 1.2; hgt += 2.2 + R() * 1.4) {
@@ -923,9 +974,8 @@ const MODEL = {"params":{"bay":8.0,"n_bays":3,"depth":16.0,"n_trusses":3,"pier_a
           for (let k = 0; k < 3; k++) { const a = R() * 6.28; limb([x, y0, z], [x + Math.cos(a) * mR * 0.4, y0 + H * 0.6, z + Math.sin(a) * mR * 0.4], 0.1, sp); }
         } else {
           const live = sp === 'live_oak', base = Math.min(Math.max(t.base, 5), H * 0.5), dbh = Math.min(4.2, (live ? 0.65 : 0.5) + (live ? 0.036 : 0.03) * H);
-          t.dbh = dbh;
           const fork = Math.max(5, base * 0.75);
-          trunk(t, sp, x, y0 - 0.5, z, dbh / 2, dbh * 0.36, fork + 0.5);
+          trunk(sp, x, y0 - 0.5, z, dbh / 2, dbh * 0.36, fork + 0.5);
           const cy = y0 + (base + H) / 2 + 0.06 * (H - base), ry = (H - base) / 2;
           const nl = 3 + Math.floor(R() * 3);
           for (let k = 0; k < nl; k++) {
@@ -945,13 +995,14 @@ const MODEL = {"params":{"bay":8.0,"n_bays":3,"depth":16.0,"n_trusses":3,"pier_a
       });
       const o = new T.Object3D(), all = [].concat(...clumps), RC = prng(4242);
       // dark inner cores give each crown its mass
-      const cores = all.filter((_, k) => k % 2 === 0);
-      const core = new T.InstancedMesh(new T.IcosahedronGeometry(1, 1), nearCut(STD({ color: 0xffffff, roughness: 1 })), cores.length);
+      const cores = all.filter((_, k) => k % 2 === 0), coreMats = see3(STD({ color: 0xffffff, roughness: 1 }));
+      const core = new T.InstancedMesh(new T.IcosahedronGeometry(1, 1), coreMats[0], cores.length);
       cores.forEach(([p, sz, flat, c, shade], k) => {
         o.position.set(...p); o.rotation.set(0, 0, 0); o.scale.set(sz * 0.6, sz * 0.6 * flat, sz * 0.6); o.updateMatrix();
         core.setMatrixAt(k, o.matrix); core.setColorAt(k, col.setHex(c).multiplyScalar(shade * 0.5));
       });
       core.instanceMatrix.needsUpdate = true; core.instanceColor.needsUpdate = true; core.castShadow = true; core.receiveShadow = true; site.add(core);
+      ghostIM(core, coreMats);
       // foliage cards: three crossed quads with an alpha-cut needle or leaf texture
       const cardGeo = (() => {
         const pos = [], uv = [], idx = [];
@@ -977,14 +1028,15 @@ const MODEL = {"params":{"bay":8.0,"n_bays":3,"depth":16.0,"n_trusses":3,"pier_a
         const tx = new T.CanvasTexture(c); tx.anisotropy = 4; return tx; };
       const mkCards = (list, tex) => {
         if (!list.length) return;
-        const m = nearCut(STD({ color: 0xffffff, map: tex, alphaTest: 0.45, side: T.DoubleSide, roughness: 0.85 }));
-        const im = new T.InstancedMesh(cardGeo, m, list.length);
+        const mats = see3(STD({ color: 0xffffff, map: tex, alphaTest: 0.45, side: T.DoubleSide, roughness: 0.85 }));
+        const im = new T.InstancedMesh(cardGeo, mats[0], list.length);
         im.customDepthMaterial = new T.MeshDepthMaterial({ depthPacking: T.RGBADepthPacking, map: tex, alphaTest: 0.45 });
         list.forEach(([p, sz, c, shade], k) => {
           o.position.set(...p); o.rotation.set((RC() - 0.5) * 0.8, RC() * 6.283, (RC() - 0.5) * 0.8); o.scale.setScalar(sz); o.updateMatrix();
           im.setMatrixAt(k, o.matrix); im.setColorAt(k, col.setHex(c).multiplyScalar(shade * 1.25));
         });
         im.instanceMatrix.needsUpdate = true; im.instanceColor.needsUpdate = true; im.castShadow = true; im.receiveShadow = true; site.add(im);
+        ghostIM(im, mats);
       };
       const pineCards = [], oakCards = [];
       all.forEach(([p, sz, flat, c, shade, sp]) => {
@@ -996,18 +1048,22 @@ const MODEL = {"params":{"bay":8.0,"n_bays":3,"depth":16.0,"n_trusses":3,"pier_a
       });
       mkCards(pineCards, cardTex(false)); mkCards(oakCards, cardTex(true));
       const lg = new T.CylinderGeometry(0.7, 1, 1, 6); lg.translate(0, 0.5, 0);
-      const lm = new T.InstancedMesh(lg, STD({ color: 0xffffff, map: barkTex }), limbs.length), q = new T.Quaternion(), dv = new T.Vector3();
+      const limbMats = see3(STD({ color: 0xffffff, map: barkTex }));
+      const lm = new T.InstancedMesh(lg, limbMats[0], limbs.length), q = new T.Quaternion(), dv = new T.Vector3();
       limbs.forEach(([a, b, r, sp], k) => {
         dv.set(b[0] - a[0], b[1] - a[1], b[2] - a[2]); const L = dv.length(); q.setFromUnitVectors(Yup, dv.normalize());
         o.position.set(...a); o.quaternion.copy(q); o.scale.set(r, L, r); o.updateMatrix(); lm.setMatrixAt(k, o.matrix);
         lm.setColorAt(k, col.setHex(sp === 'dead' ? 0x6f6458 : sp === 'ponderosa' ? 0x7a5236 : (BARK[sp] || 0x5a534c)));
       });
       lm.instanceMatrix.needsUpdate = true; if (lm.instanceColor) lm.instanceColor.needsUpdate = true; lm.castShadow = true; site.add(lm);
+      if (limbs.length) ghostIM(lm, limbMats);
     }
 
-    // camera + orbit
-    const target = new T.Vector3(0, 6, 0);
+    // ---------- camera: orbit around the barn, or free pan across the site
+    const HOME = new T.Vector3(C0[0], C0[1] + 6, C0[2]);   // the orbit target: the middle of the barn
+    const target = HOME.clone();
     const cam = (MODEL.page && MODEL.page.site === 'house') ? { th: -0.17, ph: 1.14, r: 68 } : { th: -0.55, ph: 1.12, r: 66 };   // the house site opens on its open front, clear of the trees
+    const CAM0 = { ...cam };
     const VIEWS = { yard: { th: -0.785, ph: 1.16, r: 66 }, front: { th: 0, ph: 1.24, r: 58 }, storm: { th: -1.571, ph: 1.2, r: 58 },
       road: { th: 2.356, ph: 1.18, r: 66 }, top: { th: 0, ph: 0.02, r: 78 }, site: { th: -0.6, ph: 0.98, r: 520 } };
     {   // view names carry the compass point the camera looks from, worked out from the site's grid bearing
@@ -1016,61 +1072,140 @@ const MODEL = {"params":{"bay":8.0,"n_bays":3,"depth":16.0,"n_trusses":3,"pier_a
       document.querySelectorAll('[data-view]').forEach(b => { const v = VIEWS[b.dataset.view], nm = NM[b.dataset.view]; if (v && nm && MODEL.site) b.textContent = `${nm} (${pt8(MODEL.site.bearing + 90 - v.th * 180 / Math.PI)})`; });
     }
     if (SITE) MAXR = 760;
+    const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
+    let RS = 12;   // the barn's radius: what the trees clear around while orbiting
+    M.members.forEach(m => { if (m.group === 'site' || m.role === 'vehicle' || m.role === 'structure') return; [m.a, m.b, m.c].forEach(p => { if (p) RS = Math.max(RS, Math.hypot(p[0] - C0[0], p[2] - C0[2])); }); });
+    RS = Math.min(RS, 40);
+    let free = false;   // free pan: the look-at point roams the whole block, riding just over the ground
+    const EXT = SITE ? SITE.ext : { x0: C0[0] - 140, x1: C0[0] + 140, z0: C0[2] - 140, z1: C0[2] + 140 };
+    const FREE_R = [6, SITE ? MAXR : 400];   // zoom range while free panning (past ~760 ft the fog swallows the block)
     const place = () => {
-      camera.position.set(target.x + cam.r * Math.sin(cam.ph) * Math.sin(cam.th), target.y + cam.r * Math.cos(cam.ph), target.z + cam.r * Math.sin(cam.ph) * Math.cos(cam.th));
-      camera.lookAt(target);
+      const at = ph => camera.position.set(target.x + cam.r * Math.sin(ph) * Math.sin(cam.th), target.y + cam.r * Math.cos(ph), target.z + cam.r * Math.sin(ph) * Math.cos(cam.th));
+      const low = () => camera.position.y < siteH(camera.position.x, camera.position.z) + 1.5;
+      at(cam.ph);
+      if (low()) {   // never under the ground: tip the camera up until it clears the terrain
+        let a = 0.02, b = cam.ph;
+        for (let i = 0; i < 12; i++) { const m = (a + b) / 2; at(m); if (low()) b = m; else a = m; }
+        cam.ph = a; at(a);
+        if (low()) camera.position.y = siteH(camera.position.x, camera.position.z) + 1.5;
+      }
+      camera.lookAt(target); camera.updateMatrixWorld();
+      SEE_P.value.copy(free ? target : HOME).applyMatrix4(camera.matrixWorldInverse);   // see-through subject: the barn, or the look-at point
+      SEE.value.set(free ? clamp(cam.r * 0.35, 6, 40) : RS, Math.min(18, cam.r * 0.5));
+      updateGhosts(free ? target : HOME);
     };
     let raf = 0;
     render = () => { if (raf) return; raf = requestAnimationFrame(() => { raf = 0; place(); renderer.render(scene, camera); }); };
     const size = () => { const w = wrap.clientWidth, h = wrap.clientHeight; if (!w || !h) return; renderer.setSize(w, h, false); camera.aspect = w / h; camera.updateProjectionMatrix(); render(); };
     const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
-    const goView = v => animTo(VIEWS[v], v === "site" && SITE ? new T.Vector3(SC[0], 0, SC[1]) : new T.Vector3(0, 6, 0));
-    focusOn = (p, r) => animTo({ th: cam.th, ph: Math.min(Math.max(cam.ph, 0.95), 1.3), r }, new T.Vector3(p[0], p[1], p[2]));
+    let anim = 0;   // the running camera animation; a newer one, or the user taking hold of the view, stops it
     const animTo = (to, to_t) => {
-      const from = { ...cam }, t0 = performance.now(), from_t = target.clone();
+      const id = ++anim, from = { ...cam }, t0 = performance.now(), from_t = target.clone();
       let dth = to.th - from.th; while (dth > Math.PI) dth -= 2 * Math.PI; while (dth < -Math.PI) dth += 2 * Math.PI;
       const step = now => {
+        if (id !== anim) return;
         const k = reduce ? 1 : Math.min(1, (now - t0) / 550); const e = k < 0.5 ? 2 * k * k : 1 - Math.pow(-2 * k + 2, 2) / 2;
         cam.th = from.th + dth * e; cam.ph = from.ph + (to.ph - from.ph) * e; cam.r = from.r + (to.r - from.r) * e; target.lerpVectors(from_t, to_t, e);
         place(); renderer.render(scene, camera); if (k < 1) requestAnimationFrame(step);
       };
       requestAnimationFrame(step);
     };
-    const ptrs = new Map(); let moved = 0, panMode = false, pinch0 = 0;
+    const goView = v => animTo(VIEWS[v], v === 'site' && SITE ? new T.Vector3(SC[0], 0, SC[1]) : HOME);
+
+    // free pan helpers: rays from the pointer onto the terrain
+    const ray = new T.Raycaster(), ndc = new T.Vector2(), plane = new T.Plane(new T.Vector3(0, 1, 0), 0), hitP = new T.Vector3();
+    const rayAt = (x, y) => { const b = cv.getBoundingClientRect(); ndc.set((x - b.left) / b.width * 2 - 1, -(y - b.top) / b.height * 2 + 1); ray.setFromCamera(ndc, camera); return ray.ray; };
+    const groundHit = (x, y, out) => {   // where the line of sight under a screen point meets the terrain (marched over the height field)
+      const { origin: o, direction: d } = rayAt(x, y), tmax = cam.r * 4 + 600;
+      for (let t0 = 0, t = 0.5; t < tmax; t0 = t, t += Math.max(0.5, t * 0.02)) {
+        if (o.y + d.y * t > siteH(o.x + d.x * t, o.z + d.z * t)) continue;
+        for (let i = 0; i < 10; i++) { const tm = (t0 + t) / 2; if (o.y + d.y * tm > siteH(o.x + d.x * tm, o.z + d.z * tm)) t0 = tm; else t = tm; }
+        return out.copy(o).addScaledVector(d, t);
+      }
+      return null;
+    };
+    const settle = k => {   // keep the look-at point inside the block and near the ground under it (easing down by k)
+      target.x = clamp(target.x, EXT.x0, EXT.x1); target.z = clamp(target.z, EXT.z0, EXT.z1);
+      const g = siteH(target.x, target.z);
+      target.y = clamp(target.y + (g + 2.5 - target.y) * k, g + 0.5, g + 2.5 + cam.r * 0.3);
+    };
+    let grab = null;   // the patch of ground picked up by a free-pan drag
+    const panTo = (x, y, px, py) => {
+      if (grab) {   // keep the grabbed ground under the pointer
+        plane.constant = -grab.y;
+        if (rayAt(x, y).intersectPlane(plane, hitP) && hitP.distanceTo(camera.position) < Math.max(cam.r * 4.5, 90)) { target.x += grab.x - hitP.x; target.z += grab.z - hitP.z; return; }
+      }
+      // pointer near or above the horizon: move by the drag, scaled to the look-at distance
+      const s = 2 * cam.r * Math.tan(camera.fov * Math.PI / 360) / Math.max(1, cv.clientHeight), f = s / Math.max(0.3, Math.cos(cam.ph));
+      const dx = x - px, dy = y - py, c = Math.cos(cam.th), sn = Math.sin(cam.th);
+      target.x -= dx * s * c + dy * f * sn; target.z += dx * s * sn - dy * f * c;
+    };
+    const zoomAt = (k, x, y) => {   // zoom about the ground under the pointer, which stays put on screen
+      const r1 = clamp(cam.r * k, FREE_R[0], FREE_R[1]); k = r1 / cam.r;
+      const p = groundHit(x, y, hitP);
+      if (p && p.distanceTo(camera.position) < cam.r * 6 + 100) target.sub(p).multiplyScalar(k).add(p);
+      cam.r = r1;
+    };
+
+    // pointer: left drag orbits, right or shift drag slides the target, pinch zooms. Free pan: drag pans,
+    // right/ctrl/shift drag orbits, the wheel zooms toward the pointer; on touch two fingers pinch, twist and tilt.
+    const ptrs = new Map(); let mode = '', g0 = null;
+    const pair = () => { const [a, b] = [...ptrs.values()]; return { x: (a.x + b.x) / 2, y: (a.y + b.y) / 2, d: Math.max(1, Math.hypot(b.x - a.x, b.y - a.y)), a: Math.atan2(b.y - a.y, b.x - a.x) }; };
+    const startOne = (x, y, alt) => {
+      mode = free ? (alt ? 'orbit' : 'pan') : (alt ? 'shift' : 'orbit'); grab = null;
+      if (mode === 'pan') { place(); grab = groundHit(x, y, new T.Vector3()); if (grab && grab.distanceTo(camera.position) > Math.max(cam.r * 3, 60)) grab = null; }
+    };
     cv.addEventListener('contextmenu', e => e.preventDefault());
     cv.addEventListener('pointerdown', e => {
-      cv.setPointerCapture(e.pointerId); ptrs.set(e.pointerId, { x: e.clientX, y: e.clientY }); moved = 0;
-      panMode = e.button === 2 || e.shiftKey;
-      if (ptrs.size === 2) { const p = [...ptrs.values()]; pinch0 = Math.hypot(p[0].x - p[1].x, p[0].y - p[1].y); }
+      anim++;
+      try { cv.setPointerCapture(e.pointerId); } catch (_) { /* pointer already gone */ }
+      ptrs.set(e.pointerId, { x: e.clientX, y: e.clientY });
+      if (ptrs.size === 2) { mode = 'two'; g0 = pair(); }
+      else if (ptrs.size === 1) startOne(e.clientX, e.clientY, e.button === 2 || e.shiftKey || e.ctrlKey || e.metaKey);
     });
     cv.addEventListener('pointermove', e => {
-      if (!ptrs.has(e.pointerId)) return;
-      const prev = ptrs.get(e.pointerId); const dx = e.clientX - prev.x, dy = e.clientY - prev.y;
-      ptrs.set(e.pointerId, { x: e.clientX, y: e.clientY }); moved += Math.abs(dx) + Math.abs(dy);
-      if (ptrs.size === 2) {
-        const p = [...ptrs.values()]; const d = Math.hypot(p[0].x - p[1].x, p[0].y - p[1].y);
-        if (pinch0) cam.r = Math.min(MAXR, Math.max(10, cam.r * pinch0 / d)); pinch0 = d;
-      } else if (panMode) {
-        const s = cam.r * 0.0016; const right = new T.Vector3(Math.cos(cam.th), 0, -Math.sin(cam.th));
-        target.addScaledVector(right, -dx * s); target.y = Math.max(-2, Math.min(24, target.y + dy * s));
-      } else {
-        cam.th -= dx * 0.0075; cam.ph = Math.min(1.52, Math.max(0.02, cam.ph - dy * 0.0075));
-      }
+      const prev = ptrs.get(e.pointerId); if (!prev) return;
+      const px = prev.x, py = prev.y, dx = e.clientX - px, dy = e.clientY - py;
+      ptrs.set(e.pointerId, { x: e.clientX, y: e.clientY });
+      if (mode === 'two' && ptrs.size === 2) {
+        const g = pair();
+        let da = g.a - g0.a; while (da > Math.PI) da -= 2 * Math.PI; while (da < -Math.PI) da += 2 * Math.PI;
+        if (free) {
+          place(); zoomAt(g0.d / g.d, g.x, g.y);
+          cam.th += da - (g.x - g0.x) * 0.006; cam.ph = clamp(cam.ph - (g.y - g0.y) * 0.006, 0.02, 1.53); settle(0);
+        } else cam.r = clamp(cam.r * g0.d / g.d, 10, MAXR);
+        g0 = g;
+      } else if (mode === 'pan') { place(); panTo(e.clientX, e.clientY, px, py); settle(0.15); }
+      else if (mode === 'shift') {
+        const s = cam.r * 0.0016;
+        target.x -= dx * s * Math.cos(cam.th); target.z += dx * s * Math.sin(cam.th); target.y = clamp(target.y + dy * s, HOME.y - 8, HOME.y + 18);
+      } else if (mode === 'orbit') { cam.th -= dx * 0.0075; cam.ph = clamp(cam.ph - dy * 0.0075, 0.02, free ? 1.53 : 1.52); }
+      else return;
       render();
     });
-    const isShown = o => { while (o) { if (!o.visible) return false; o = o.parent; } return true; };
-    const ray = new T.Raycaster(), ndc = new T.Vector2();
-    cv.addEventListener('pointerup', e => {
-      ptrs.delete(e.pointerId); if (ptrs.size < 2) pinch0 = 0;
-      if (moved > 5 || ptrs.size) return;
-      const rect = cv.getBoundingClientRect();
-      ndc.set(((e.clientX - rect.left) / rect.width) * 2 - 1, -((e.clientY - rect.top) / rect.height) * 2 + 1);
-      ray.setFromCamera(ndc, camera);
-      const hit = ray.intersectObjects(pickables, true).find(h => isShown(h.object));
-      if (hit && hit.object.userData.tree) showTree(hit.object.userData.tree); else if (hit) showMember(hit.object.userData.id); else clearSel();
-    });
-    cv.addEventListener('pointercancel', e => { ptrs.delete(e.pointerId); });
-    cv.addEventListener('wheel', e => { e.preventDefault(); cam.r = Math.min(MAXR, Math.max(10, cam.r * (e.deltaY > 0 ? 1.1 : 0.9))); render(); }, { passive: false });
+    const lift = e => {
+      ptrs.delete(e.pointerId);
+      if (ptrs.size === 1) { const [p] = [...ptrs.values()]; startOne(p.x, p.y, false); }   // one finger left: carry on with it
+      else if (!ptrs.size) { mode = ''; grab = null; }
+    };
+    cv.addEventListener('pointerup', lift); cv.addEventListener('pointercancel', lift);
+    cv.addEventListener('wheel', e => {
+      e.preventDefault(); anim++;
+      const k = Math.exp(clamp(e.deltaY * (e.deltaMode === 1 ? 33 : e.deltaMode === 2 ? 400 : 1), -300, 300) * 0.0012);
+      if (free) { place(); zoomAt(k, e.clientX, e.clientY); settle(0); } else cam.r = clamp(cam.r * k, 10, MAXR);
+      render();
+    }, { passive: false });
+    const freeBtn = document.getElementById('freeBtn'), hint = document.getElementById('cvhint');
+    const hintFor = touch => { hint.textContent = touch ? 'Drag to pan · pinch to zoom · two fingers to turn' : 'Drag to pan · right-drag to turn · scroll to zoom'; };
+    cv.addEventListener('pointerdown', e => hintFor(e.pointerType === 'touch'));
+    const setFree = (on, stay) => {
+      free = on; freeBtn.classList.toggle('on', on); freeBtn.setAttribute('aria-pressed', String(on));
+      if (on) hintFor(!matchMedia('(any-pointer: fine)').matches);
+      hint.hidden = !on;
+      if (!on && !stay) animTo(CAM0, HOME); else render();   // off: ease back to the orbit around the barn
+    };
+    freeBtn.addEventListener('click', () => setFree(!free));
+    document.addEventListener('keydown', e => { if (e.key === 'Escape' && free) setFree(false); });
 
     // layers
     const layers = { roof: true, siding: true, leantos: true, wood: true, gear: true, vehicles: true, labels: false, xray: false, site: true };
@@ -1086,27 +1221,16 @@ const MODEL = {"params":{"bay":8.0,"n_bays":3,"depth":16.0,"n_trusses":3,"pier_a
     const applyLayers = () => {
       M.members.forEach(m => { const c = catOf(m); let v = c ? layers[c] : true; if (m.group.indexOf('leanto') === 0 && !layers.leantos) v = false; (meshes[m.id] || []).forEach(o => { o.visible = v; }); });
       labels.visible = layers.labels; site.visible = layers.site;
-      Object.values(meshes).forEach(list => list.forEach(o => {
-        if (!o.userData.wood) return;
-        const want = layers.xray ? xmat(o.userData.color) : o.userData.solid;
-        if (o.material === o.userData.base) o.material = want;
-        o.userData.base = want;
-      }));
+      Object.values(meshes).forEach(list => list.forEach(o => { if (o.userData.wood) o.material = layers.xray ? xmat(o.userData.color) : o.userData.solid; }));
       render();
     };
     Object.keys(layers).forEach(k => { const el = document.getElementById('L-' + k); if (!el) return; el.addEventListener('change', () => { layers[k] = el.checked; applyLayers(); }); });
     document.querySelectorAll('[data-view]').forEach(b => b.addEventListener('click', () => {
       const v = b.dataset.view;
+      if (free) setFree(false, true);
       if (v === 'frame') { ['roof', 'siding', 'wood', 'gear'].forEach(k => { layers[k] = false; document.getElementById('L-' + k).checked = false; }); applyLayers(); goView('yard'); return; }
       goView(v);
     }));
-
-    let hiList = [];
-    selectIds = ids => {
-      hiList.forEach(o => { o.material = o.userData.base; }); hiList = [];
-      ids.forEach(id => (meshes[id] || []).forEach(o => { o.material = HI; hiList.push(o); }));
-      render();
-    };
     new ResizeObserver(size).observe(wrap);
     matchMedia('(prefers-color-scheme: dark)').addEventListener('change', setSky);
     new MutationObserver(setSky).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
@@ -1116,68 +1240,6 @@ const MODEL = {"params":{"bay":8.0,"n_bays":3,"depth":16.0,"n_trusses":3,"pier_a
   } else {
     wrap.innerHTML = '<p style="padding:16px">The 3D viewer could not load. The drawings below still work.</p>';
   }
-
-  // ---------- info panel
-  const cutRowOf = id => M.cutlist.find(r => r.marks && r.marks.indexOf(id) >= 0);
-  const jointChips = list => list.map(j => M.joints[j] ? `<button class="jchip" data-j="${j}">${j} · ${esc(M.joints[j].name)}</button>` : '').join('');
-  const defaultInfo = () => {
-    info.innerHTML = `<h3>Empty selection</h3>
-      <p class="note">Click a log in the model or a row in the cut list.</p>
-      <dl><dt>Members</dt><dd>${M.members.length}</dd><dt>Logs to cut</dt><dd>${S.n_logs}</dd><dt>Green weight</dt><dd>~${S.wood_weight.toLocaleString()} lb</dd>
-      <dt>Ridge</dt><dd>${fmtFt(S.levels.ridge)}</dd><dt>Eave</dt><dd>${fmtFt(S.levels.eave)}</dd><dt>Under ties</dt><dd>${fmtFt(S.levels.tie_under)}</dd></dl>`;
-    document.getElementById('cvhint').textContent = 'Click a member';
-  };
-  function showMember(id) {
-    const m = byId[id]; if (!m) return;
-    selectIds([id]);
-    const role = M.roles[m.role] || m.role;
-    let rows = '';
-    if (m.type === 'log' || m.type === 'crook') {
-      const d = (m.da + m.db) / 2; const lb = Math.round(Math.PI * d * d / 4 * m.len * P.green_pcf);
-      rows += `<dt>Small end</dt><dd>${fmtIn(Math.min(m.da, m.db))}</dd><dt>Butt</dt><dd>${fmtIn(Math.max(m.da, m.db))}</dd><dt>Length</dt><dd>${fmtFt(m.len)}</dd>`;
-      if (m.role !== 'peg' && m.role !== 'gear' && m.role !== 'pier') rows += `<dt>Green wt</dt><dd>~${lb} lb</dd>`;
-    } else {
-      const s = m.s.slice().sort((a, b) => b - a);
-      rows += `<dt>Size</dt><dd>${fmtFt(s[0])} × ${s[1] < 1 ? fmtIn(s[1]) : fmtFt(s[1])}</dd>`;
-    }
-    const cr = cutRowOf(id);
-    if (cr) rows += `<dt>Cut list</dt><dd>${cr.qty} × ${esc(cr.part)}, ${cr.d_in}″ × ${cr.len_ft}′</dd>`;
-    info.innerHTML = `<div class="eyebrow">${esc(m.id)}</div><h3>${esc(role)}</h3><dl>${rows}</dl>
-      ${m.note ? `<p class="note">${esc(m.note)}</p>` : ''}
-      ${m.joints && m.joints.length ? `<div class="eyebrow">Joints</div><div class="jchips">${jointChips(m.joints)}</div>` : ''}
-      <button class="btn" id="zm">Zoom to it</button> <button class="btn" id="clr">Clear</button>`;
-    info.dataset.zoom = JSON.stringify(m.c || [0, 1, 2].map(i => (m.a[i] + m.b[i]) / 2));
-    info.dataset.zr = String(Math.max(4, Math.min(14, (m.len || Math.max(...(m.s || [3]))) * 0.9)));
-    document.getElementById('cvhint').textContent = `${m.id} · ${role}`;
-  }
-  function showGroup(title, sub, ids, joints) {
-    selectIds(ids);
-    info.innerHTML = `<div class="eyebrow">${esc(sub)}</div><h3>${esc(title)}</h3>
-      <p class="note">${ids.length} piece${ids.length === 1 ? '' : 's'} lit up in orange.</p>
-      <div class="marks">${ids.map(esc).join(' ')}</div>
-      ${joints && joints.length ? `<div class="jchips">${jointChips(joints)}</div>` : ''}<button class="btn" id="clr">Clear</button>`;
-    document.getElementById('cvhint').textContent = `${title} · ${ids.length}`;
-  }
-  function showTree(t) {
-    selectIds([]);
-    const nm = { ponderosa: 'Ponderosa pine', black_oak: 'California black oak', live_oak: 'Live oak', shrub: 'Shrub or small tree', oak: 'Oak' }[t.sp] || t.sp;
-    const w = 2 * t.r8.reduce((a, b) => a + b, 0) / 8;
-    info.innerHTML = `<div class="eyebrow">Tree ${esc(t.id)} · 2022 lidar</div><h3>${esc(nm)}</h3>
-      <dl><dt>Height</dt><dd>${fmtFt(t.h)}</dd><dt>Crown width</dt><dd>${fmtFt(w)}</dd><dt>Crown base</dt><dd>${fmtFt(t.base)}</dd>
-      <dt>Trunk (est.)</dt><dd>~${Math.round((t.dbh || 0) * 12)}″</dd><dt>From the shed</dt><dd>${fmtFt(Math.hypot(t.x, t.z))}</dd></dl>
-      <p class="note">Position, height and crown shape are measured from the 2022 USGS lidar. Trunk size is estimated from height.</p>
-      <button class="btn" id="clr">Clear</button>`;
-    document.getElementById('cvhint').textContent = `${t.id} · ${nm}`;
-  }
-  function clearSel() { selectIds([]); defaultInfo(); document.querySelectorAll('tr.sel').forEach(r => r.classList.remove('sel')); }
-  const toJoint = k => { const J = M.joints[k]; if (!J) return; showGroup(J.name, k + ' · ' + J.count + ' places', M.members.filter(m => m.joints && m.joints.indexOf(k) >= 0).map(m => m.id), [k]); if (J.focus) setTimeout(() => focusOn(J.focus, J.focus_r), 250); };
-  info.addEventListener('click', e => {
-    const j = e.target.closest('[data-j]'); if (j) toJoint(j.dataset.j);
-    if (e.target.id === 'clr') clearSel();
-    if (e.target.id === 'zm' && info.dataset.zoom) focusOn(JSON.parse(info.dataset.zoom), +info.dataset.zr);
-  });
-  defaultInfo();
-  const toModel = () => document.getElementById('model').scrollIntoView({ behavior: 'smooth', block: 'start' });
 
   // ---------- joints
   const FN = { spike12: '1/2 × 12 spike', spike8: '1/2 × 8 spike', peg1: '1 in oak peg', peg34: '3/4 in oak peg', nail14: '1/4 × 5 nail' };
@@ -1190,29 +1252,16 @@ const MODEL = {"params":{"bay":8.0,"n_bays":3,"depth":16.0,"n_trusses":3,"pier_a
     card.innerHTML = `<div class="jhead"><span class="jmark">${k}</span><h3>${esc(j.name)}</h3><span class="jcount">× ${j.count}</span></div>
       ${tpl ? tpl.innerHTML : ''}<div class="jwhere">${esc(j.where)}</div>
       <ol>${j.how.map(h => `<li>${esc(h)}</li>`).join('')}</ol>
-      ${fch ? `<div class="fchips">${fch}<span class="fchip" style="background:transparent;border-color:transparent">each</span></div>` : ''}
-      <div><button class="btn" data-show="${k}">Show in model</button></div>`;
+      ${fch ? `<div class="fchips">${fch}<span class="fchip" style="background:transparent;border-color:transparent">each</span></div>` : ''}`;
     jg.appendChild(card);
-  });
-  if (jg) jg.addEventListener('click', e => {
-    const b = e.target.closest('[data-show]'); if (!b) return;
-    const k = b.dataset.show; const ids = M.members.filter(m => m.joints && m.joints.indexOf(k) >= 0).map(m => m.id);
-    showGroup(M.joints[k].name, k + ' · ' + M.joints[k].count + ' places', ids, [k]); toModel();
-    if (M.joints[k].focus) setTimeout(() => focusOn(M.joints[k].focus, M.joints[k].focus_r), 250);
   });
 
   // ---------- cut list
   const tc = document.getElementById('t-cut');
   let tw = 0;
   tc.innerHTML = `<thead><tr><th>Part</th><th class="n">Qty</th><th class="n">Small end</th><th class="n">Cut length</th><th class="n">~lb each</th><th>Species</th><th>Marks</th></tr></thead><tbody>${
-    M.cutlist.map((r, i) => { if (r.weight) tw += r.weight; return `<tr class="${r.marks.length ? 'click' : ''}" data-i="${i}"><td>${esc(r.part)}</td><td class="n">${r.qty}</td><td class="n">${r.d_in ? r.d_in + '″' : ''}</td><td class="n">${r.len_ft ? r.len_ft + '′' : ''}</td><td class="n">${r.weight ? Math.round(r.weight / r.qty) : ''}</td><td>${esc(r.species)}</td><td class="marks">${r.marks.length ? esc(r.marks.join(' ')) : esc(r.note || '')}</td></tr>`; }).join('')
+    M.cutlist.map(r => { if (r.weight) tw += r.weight; return `<tr><td>${esc(r.part)}</td><td class="n">${r.qty}</td><td class="n">${r.d_in ? r.d_in + '″' : ''}</td><td class="n">${r.len_ft ? r.len_ft + '′' : ''}</td><td class="n">${r.weight ? Math.round(r.weight / r.qty) : ''}</td><td>${esc(r.species)}</td><td class="marks">${r.marks.length ? esc(r.marks.join(' ')) : esc(r.note || '')}</td></tr>`; }).join('')
   }</tbody><tfoot><tr><td>Logs</td><td class="n">${S.n_logs}</td><td></td><td></td><td class="n">${tw.toLocaleString()}</td><td colspan="2">pounds green, all together</td></tr></tfoot>`;
-  tc.addEventListener('click', e => {
-    const tr = e.target.closest('tr[data-i]'); if (!tr) return; const r = M.cutlist[+tr.dataset.i]; if (!r.marks.length) return;
-    document.querySelectorAll('tr.sel').forEach(x => x.classList.remove('sel')); tr.classList.add('sel');
-    const js = byId[r.marks[0]] ? byId[r.marks[0]].joints : [];
-    showGroup(r.part, `Cut list · ${r.d_in}″ × ${r.len_ft}′`, r.marks, js); toModel();
-  });
 
   // ---------- buy
   const tb = document.getElementById('t-buy');
@@ -1255,9 +1304,11 @@ const MODEL = {"params":{"bay":8.0,"n_bays":3,"depth":16.0,"n_trusses":3,"pier_a
     if (m.role === 'gear') return 'd-gear';
     return 'd-log';
   };
+  // the drawings work in the barn's own frame: the model may set it down off the site origin (page.center)
+  const LM = (C0[0] || C0[1] || C0[2]) ? M.members.map(m => { const o = { ...m }; ['a', 'b', 'c'].forEach(k => { if (Array.isArray(m[k]) && m[k].length === 3) o[k] = [m[k][0] - C0[0], m[k][1] - C0[1], m[k][2] - C0[2]]; }); return o; }) : M.members;
   function shapes(v) {
     const out = [];
-    M.members.forEach(m => {
+    LM.forEach(m => {
       if (!v.keep(m)) return;
       const cls = (v.cls && v.cls(m)) || baseCls(m);
       if (m.type === 'log') {
@@ -1320,9 +1371,8 @@ const MODEL = {"params":{"bay":8.0,"n_bays":3,"depth":16.0,"n_trusses":3,"pier_a
   const jtag = (d, u, v, dx, dy, mark) => {
     const x = d.X(u), y = d.Y(v), tx = x + dx, ty = y + dy;
     ann(d, 'line', { class: 'a-dim', x1: x, y1: y, x2: tx, y2: ty });
-    const g = el('g', { class: 'a-tag', tabindex: '0', role: 'link', 'aria-label': `Joint ${mark}` }, d.svg);
+    const g = el('g', { class: 'a-tag' }, d.svg);
     el('circle', { cx: tx, cy: ty, r: 12 }, g); const t = el('text', { x: tx, y: ty + 3.5, 'text-anchor': 'middle' }, g); t.textContent = mark;
-    g.addEventListener('click', () => toJoint(mark)); g.addEventListener('keydown', e => { if (e.key === 'Enter') toJoint(mark); });
   };
   const arrowS = (d, x1, y1, x2, y2) => {
     ann(d, 'line', { class: 'a-ar', x1, y1, x2, y2 });
@@ -1422,6 +1472,5 @@ const MODEL = {"params":{"bay":8.0,"n_bays":3,"depth":16.0,"n_trusses":3,"pier_a
     const sv = [-nv[0], -nv[1]]; arrowS(d, 41 - 15 * sv[0], d.H - 19 - 15 * sv[1], 41 + 15 * sv[0], d.H - 19 + 15 * sv[1]); ann(d, 'text', { class: 'a-t', x: 64, y: d.H - 22 }, 'Sun, south');
   })();
 
-  if (location.hash && /^#J\d+$/.test(location.hash)) setTimeout(() => toJoint(location.hash.slice(1)), 300);
 })();
 </script>
