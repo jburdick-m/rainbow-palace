@@ -824,13 +824,16 @@ float seeAlpha() { return vFade * smoothstep(1.5, 4.0, length(vSeeV)); }   // th
       const passes = (ghosts ? [1, 2] : []).map(p => { const g = new T.InstancedMesh(gg, mats[p], 1); g.instanceMatrix = gm; g.instanceColor = gc; g.count = 0; g.visible = false; g.renderOrder = p; g.receiveShadow = true; g.frustumCulled = false; im.parent.add(g); return g; });
       ghostIMs.push({ im, hide: src.attributes.aHide, byTree, extra, gm, gc, passes });
     };
+    let SEE_MORE = null;
     const smooth01 = (a, b, x) => { const t = Math.min(1, Math.max(0, (x - a) / (b - a))); return t * t * (3 - 2 * t); };
     const dirV = new T.Vector3(); let seeT = 0;
     const updateGhosts = subj => {
       if (!TREES.length) return;
       const now = performance.now(), dt = seeT ? Math.min(0.1, (now - seeT) / 1000) : 0.016; seeT = now;
-      const cp = camera.position, D = Math.max(1, cp.distanceTo(subj)), Rs = free ? clamp(cam.r * 0.22, 5, 22) : 16;
-      dirV.subVectors(subj, cp).divideScalar(D);
+      if (!SEE_MORE) SEE_MORE = ((MODEL.page && MODEL.page.see) || []).map(([x, z, h, r]) => [new T.Vector3(x, siteH(x, z) + h, z), r]);
+      const cp = camera.position;
+      const subs = [[subj, free ? clamp(cam.r * 0.22, 5, 22) : 16]].concat(free ? [] : SEE_MORE);   // orbit view: the barn plus any other things the page wants kept in view (the coop)
+      subs.forEach(sb => { sb[2] = Math.max(1, cp.distanceTo(sb[0])); sb[3] = new T.Vector3().subVectors(sb[0], cp).divideScalar(sb[2]); });
       const k = Math.max(0.12, 1 - Math.exp(-dt * 7));   // never stalls, even when the clock doesn't move (headless renders)
       let moving = false, any = false;
       TREES.forEach(tr => {
@@ -838,11 +841,13 @@ float seeAlpha() { return vFade * smoothstep(1.5, 4.0, length(vSeeV)); }   // th
         let tgt = 1;
         tr.pts.forEach(([x, y, z, r]) => {
           const dx = x - cp.x, dy = y - cp.y, dz = z - cp.z, d2 = dx * dx + dy * dy + dz * dz, dist = Math.sqrt(d2);
-          const along = dx * dirV.x + dy * dirV.y + dz * dirV.z, lat = Math.sqrt(Math.max(0, d2 - along * along));
-          if (along > -r && along < D - 0.35 * Rs) {   // in front of the subject: how much of the view toward it does it cover
-            const rc = 2 + (Rs - 2) * Math.min(1, Math.max(0, along / D));
-            tgt = Math.min(tgt, 1 - 0.68 * (1 - smooth01(rc * 0.6 + r * 0.6, rc * 0.85 + r * 1.0, lat)));
-          }
+          subs.forEach(([, Rs, D, dv]) => {
+            const along = dx * dv.x + dy * dv.y + dz * dv.z, lat = Math.sqrt(Math.max(0, d2 - along * along));
+            if (along > -r && along < D - 0.35 * Rs) {   // in front of the subject: how much of the view toward it does it cover
+              const rc = 2 + (Rs - 2) * Math.min(1, Math.max(0, along / D));
+              tgt = Math.min(tgt, 1 - 0.68 * (1 - smooth01(rc * 0.6 + r * 0.6, rc * 0.85 + r * 1.0, lat)));
+            }
+          });
           tgt = Math.min(tgt, 1 - 0.8 * (1 - smooth01(r + 1, r + 9, dist)));   // the camera in or right at it
         });
         if (Math.abs(tgt - tr.fade) > 0.002) { tr.fade += (tgt - tr.fade) * k; if (Math.abs(tgt - tr.fade) <= 0.002) tr.fade = tgt; tr.dirty = true; moving = true; }
