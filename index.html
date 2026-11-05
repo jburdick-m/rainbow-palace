@@ -209,7 +209,7 @@ figcaption b { font:400 14px var(--font-display); letter-spacing:.08em; text-tra
 .sk-grid { display:grid; grid-template-columns:repeat(2, minmax(0,1fr)); gap:18px 40px; }
 .sk-grid .wide { grid-column:1 / -1; }
 .sk-grid .mid { width:100%; max-width:900px; justify-self:center; }
-.sk { gap:2px; }
+.sk { gap:2px; counter-increment:none; }
 @media (max-width:760px) { .sk-grid { grid-template-columns:minmax(0,1fr); } }
 @media (prefers-reduced-motion: reduce) { * { scroll-behavior:auto !important; } }
 </style>
@@ -270,10 +270,10 @@ figcaption b { font:400 14px var(--font-display); letter-spacing:.08em; text-tra
     <h2 id="h-sk">Sketches</h2>
   </div>
   <!--SKETCHES--><div class="sk-grid">
-    <figure class="sk wide mid"><img src="img/hero.webp" width="2000" height="1333" loading="lazy" alt="Watercolor sketch of the barn from the drive, barn doors open on the shop, the tractor bay on the left and firewood on the right, oaks behind"><figcaption><b>From the drive</b></figcaption></figure>
-    <figure class="sk"><img src="img/frame.webp" width="2000" height="1333" loading="lazy" alt="Ink and wash sketch of the bare log frame: posts, trusses, knee braces and purlins"><figcaption><b>The frame</b></figcaption></figure>
-    <figure class="sk"><img src="img/back.webp" width="2000" height="1333" loading="lazy" alt="Watercolor sketch of the back lean-to, both bays stacked with firewood, the truss gable above"><figcaption><b>Back lean-to</b></figcaption></figure>
-    <figure class="sk wide"><img src="img/elevation_bare.webp" width="2000" height="911" loading="lazy" alt="Watercolor front elevation: tractor bay, shop and firewood bay under the log truss"><figcaption><b>Front elevation</b></figcaption></figure>
+    <figure class="sk wide mid"><img src="img/hero.webp" width="2000" height="1333" loading="lazy" alt="Watercolor sketch of the barn from the drive, barn doors open on the shop, the tractor bay on the left and firewood on the right, oaks behind"></figure>
+    <figure class="sk"><img src="img/frame.webp" width="2000" height="1333" loading="lazy" alt="Ink and wash sketch of the bare log frame: posts, trusses, knee braces and purlins"></figure>
+    <figure class="sk"><img src="img/back.webp" width="2000" height="1333" loading="lazy" alt="Watercolor sketch of the back lean-to, both bays stacked with firewood, the truss gable above"></figure>
+    <figure class="sk wide"><img src="img/elevation_bare.webp" width="2000" height="911" loading="lazy" alt="Watercolor front elevation: tractor bay, shop and firewood bay under the log truss"></figure>
   </div><!--/SKETCHES-->
 </section>
 
