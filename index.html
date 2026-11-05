@@ -265,6 +265,18 @@ figcaption b { font:400 14px var(--font-display); letter-spacing:.08em; text-tra
   </dl>
 </section>
 
+<section class="sec" id="sketches" aria-labelledby="h-sk">
+  <div class="sec-head">
+    <h2 id="h-sk">Sketches</h2>
+  </div>
+  <!--SKETCHES--><div class="sk-grid">
+    <figure class="sk wide mid"><img src="img/hero.webp" width="2000" height="1333" loading="lazy" alt="Watercolor sketch of the barn from the drive, barn doors open on the shop, the tractor bay on the left and firewood on the right, oaks behind"><figcaption><b>From the drive</b></figcaption></figure>
+    <figure class="sk"><img src="img/frame.webp" width="2000" height="1333" loading="lazy" alt="Ink and wash sketch of the bare log frame: posts, trusses, knee braces and purlins"><figcaption><b>The frame</b></figcaption></figure>
+    <figure class="sk"><img src="img/back.webp" width="2000" height="1333" loading="lazy" alt="Watercolor sketch of the back lean-to, both bays stacked with firewood, the truss gable above"><figcaption><b>Back lean-to</b></figcaption></figure>
+    <figure class="sk wide"><img src="img/elevation_bare.webp" width="2000" height="911" loading="lazy" alt="Watercolor front elevation: tractor bay, shop and firewood bay under the log truss"><figcaption><b>Front elevation</b></figcaption></figure>
+  </div><!--/SKETCHES-->
+</section>
+
 <section class="sec" id="drawings" aria-labelledby="h-dr">
   <div class="sec-head">
     <h2 id="h-dr">Plan, elevation and section</h2>
@@ -287,17 +299,6 @@ figcaption b { font:400 14px var(--font-display); letter-spacing:.08em; text-tra
   </div>
 </section>
 
-<section class="sec" id="sketches" aria-labelledby="h-sk">
-  <div class="sec-head">
-    <h2 id="h-sk">Sketches</h2>
-  </div>
-  <!--SKETCHES--><div class="sk-grid">
-    <figure class="sk wide mid"><img src="img/hero.webp" width="2000" height="1333" loading="lazy" alt="Watercolor sketch of the barn from the drive, barn doors open on the shop, the tractor bay on the left and firewood on the right, oaks behind"><figcaption><b>From the drive</b></figcaption></figure>
-    <figure class="sk"><img src="img/frame.webp" width="2000" height="1333" loading="lazy" alt="Ink and wash sketch of the bare log frame: posts, trusses, knee braces and purlins"><figcaption><b>The frame</b></figcaption></figure>
-    <figure class="sk"><img src="img/back.webp" width="2000" height="1333" loading="lazy" alt="Watercolor sketch of the back lean-to, both bays stacked with firewood, the truss gable above"><figcaption><b>Back lean-to</b></figcaption></figure>
-    <figure class="sk wide"><img src="img/elevation_bare.webp" width="2000" height="911" loading="lazy" alt="Watercolor front elevation: tractor bay, shop and firewood bay under the log truss"><figcaption><b>Front elevation</b></figcaption></figure>
-  </div><!--/SKETCHES-->
-</section>
 
 <section class="sec" id="cutlist" aria-labelledby="h-c">
   <div class="sec-head">
@@ -796,20 +797,21 @@ float seeAlpha() {
     // pass 0: the tree as usual, minus the see-through part; 1: depth of that part (not the wisps fading out at the lens);
     // 2: its colour, blended over the scene: the nearest veil layer, plus any wisps in front of it
     const SEE_CUT = ['seeA < 0.999', 'seeA >= 0.999 || seeA < 0.25', 'seeA >= 0.999 || seeA < 0.004'];
-    const seeThrough = (m, pass = 0) => {
+    const seeThrough = (m, pass = 0, pre = null) => {
       if (pass === 1) Object.assign(m, { transparent: true, blending: T.NoBlending, colorWrite: false });
       if (pass === 2) Object.assign(m, { transparent: true, depthWrite: false });
       m.customProgramCacheKey = () => 'see' + pass;
       m.onBeforeCompile = sh => {
+        if (pre) pre(sh);
         sh.uniforms.uSeeP = SEE_P; sh.uniforms.uSee = SEE;
-        sh.vertexShader = 'invariant gl_Position;\nvarying vec3 vSeeV;\n' + sh.vertexShader.replace('#include <project_vertex>', '#include <project_vertex>\n  vSeeV = mvPosition.xyz;');
+        sh.vertexShader = 'invariant gl_Position;\nvarying vec3 vSeeV;\n' + sh.vertexShader.replace('#include <project_vertex>', '#include <project_vertex>\n  vSeeV = mvPosition.xyz;').replace('// bbdone', 'vSeeV = mvPosition.xyz;');
         sh.fragmentShader = SEE_GLSL + sh.fragmentShader
           .replace('void main() {', `void main() {\n  float seeA = seeAlpha();\n  if (${SEE_CUT[pass]}) discard;`)
           .replace('#include <dithering_fragment>', '#include <dithering_fragment>\n  gl_FragColor.a = seeA;');
       };
       return m;
     };
-    const see3 = base => [0, 1, 2].map(p => seeThrough(base.clone(), p));
+    const see3 = (base, pre) => [0, 1, 2].map(p => seeThrough(base.clone(), p, pre));
     // passes 1 and 2 only draw what can reach into the zone: instanced foliage, cores and limbs are binned into 12 ft
     // cells (bounding spheres from the instance matrices), trunks go one by one; each frame the cells and trunks that
     // touch the cone or the near sphere are copied into the extra passes
@@ -938,7 +940,11 @@ float seeAlpha() {
       const clumps = [[], [], []], limbs = [];
       const FOL = { ponderosa: [0x3c5a2c, 0x34502a, 0x46632f], black_oak: [0x6d8a3b, 0x7a9443, 0x5f7d35], live_oak: [0x4c5f3c, 0x56683f, 0x44573a], shrub: [0x5d6b3e, 0x667542, 0x52603a], manzanita: [0x6e7a52, 0x768158, 0x66724c], fruit: [0x6f9440, 0x7a9e48, 0x648a3a], oak: [0x5f7a3a, 0x6a8540, 0x566f36] };
       const BARK = { ponderosa: 0xffffff, black_oak: 0x4a4440, live_oak: 0x7b766e, shrub: 0x6b4a3a, manzanita: 0x7a3322, fruit: 0x5e4a3a, oak: 0x5a534c };
-      const trunkMat = {}; const tmat = sp => trunkMat[sp] || (trunkMat[sp] = see3(sp === 'ponderosa' ? STD({ color: 0xffffff, map: pineBarkTex, bumpMap: pineBarkTex, bumpScale: 0.08 }) : STD({ color: BARK[sp] || 0x5a534c, map: barkTex, bumpMap: barkTex, bumpScale: 0.08 })));
+      const PAPER = new T.Color(0xF3EEE2);
+      const inkEdge = sh => { sh.fragmentShader = sh.fragmentShader.replace('#include <dithering_fragment>', `#include <dithering_fragment>
+  float fc = abs(dot(normalize(normal), normalize(vViewPosition)));
+  gl_FragColor.rgb = mix(gl_FragColor.rgb * 0.42, mix(gl_FragColor.rgb, vec3(0.95, 0.93, 0.88), 0.12), smoothstep(0.12, 0.6, fc));`); };
+      const trunkMat = {}; const tmat = sp => trunkMat[sp] || (trunkMat[sp] = see3(sp === 'ponderosa' ? STD({ color: 0xffffff, map: pineBarkTex, bumpMap: pineBarkTex, bumpScale: 0.08 }) : STD({ color: BARK[sp] || 0x5a534c, map: barkTex, bumpMap: barkTex, bumpScale: 0.08 })), inkEdge);
       const col = new T.Color();
       const limb = (a, b, r, sp) => limbs.push([a, b, r, sp]);
       const clump = (p, s, sp, R, flat) => { const v = Math.floor(R() * 3); clumps[v].push([p, s, flat, (FOL[sp] || FOL.oak)[Math.floor(R() * 3)], 0.82 + R() * 0.3, sp]); };
@@ -996,10 +1002,10 @@ float seeAlpha() {
       const cores = all.filter((_, k) => k % 2 === 0), coreMats = see3(STD({ color: 0xffffff, roughness: 1 }));
       const core = new T.InstancedMesh(new T.IcosahedronGeometry(1, 1), coreMats[0], cores.length);
       cores.forEach(([p, sz, flat, c, shade], k) => {
-        o.position.set(...p); o.rotation.set(0, 0, 0); o.scale.set(sz * 0.6, sz * 0.6 * flat, sz * 0.6); o.updateMatrix();
-        core.setMatrixAt(k, o.matrix); core.setColorAt(k, col.setHex(c).multiplyScalar(shade * 0.5));
+        o.position.set(...p); o.rotation.set(0, 0, 0); o.scale.set(sz * 0.42, sz * 0.42 * flat, sz * 0.42); o.updateMatrix();
+        core.setMatrixAt(k, o.matrix); core.setColorAt(k, col.setHex(c).multiplyScalar(shade * 0.62));
       });
-      core.instanceMatrix.needsUpdate = true; core.instanceColor.needsUpdate = true; core.castShadow = true; core.receiveShadow = true; core.customDepthMaterial = clearDepth(); site.add(core);
+      core.instanceMatrix.needsUpdate = true; core.instanceColor.needsUpdate = true; core.castShadow = true; core.receiveShadow = true; core.customDepthMaterial = clearDepth(); Object.assign(coreMats[0], { colorWrite: false, depthWrite: false }); site.add(core);   // cores only shade; the washes are what you see
       ghostIM(core, coreMats);
       // foliage cards: three crossed quads with an alpha-cut needle or leaf texture
       const cardGeo = (() => {
@@ -1036,6 +1042,46 @@ float seeAlpha() {
         im.instanceMatrix.needsUpdate = true; im.instanceColor.needsUpdate = true; im.castShadow = true; im.receiveShadow = true; site.add(im);
         ghostIM(im, mats);
       };
+      // watercolor washes: each clump is a painted blot that always faces the lens; the texture carries the paint
+      // (pooled darker edge, lighter top, paper flecks), the instance colour the pigment
+      const washTex = pine => { const N = 256, c = document.createElement('canvas'); c.width = c.height = N; const g = c.getContext('2d'), R = prng(pine ? 31 : 37);
+        const sh = document.createElement('canvas'); sh.width = sh.height = N; const m = sh.getContext('2d'); m.fillStyle = '#fff';
+        for (let i = 0; i < (pine ? 26 : 14); i++) { const a = R() * 6.283, d = Math.pow(R(), 0.7) * N * 0.26, r = N * (pine ? 0.07 + R() * 0.07 : 0.11 + R() * 0.1);
+          m.beginPath(); m.arc(N / 2 + Math.cos(a) * d, N / 2 + Math.sin(a) * d * 0.85, r, 0, 6.283); m.fill(); }
+        if (pine) for (let i = 0; i < 70; i++) { const a = R() * 6.283, d = N * (0.24 + R() * 0.16); m.lineWidth = 2 + R() * 3; m.strokeStyle = '#fff'; m.beginPath(); m.moveTo(N / 2 + Math.cos(a) * d * 0.6, N / 2 + Math.sin(a) * d * 0.5); m.lineTo(N / 2 + Math.cos(a) * d, N / 2 + Math.sin(a) * d * 0.85); m.stroke(); }
+        const sd = m.getImageData(0, 0, N, N).data, out = g.createImageData(N, N), o = out.data;
+        const A = (x, y) => (x < 0 || y < 0 || x >= N || y >= N) ? 0 : sd[(y * N + x) * 4 + 3];
+        for (let y = 0; y < N; y++) for (let x = 0; x < N; x++) {
+          const k = (y * N + x) * 4, a = A(x, y); if (!a) continue;
+          let e = 0; for (const [dx, dy] of [[6, 0], [-6, 0], [0, 6], [0, -6], [4, 4], [-4, 4], [4, -4], [-4, -4]]) e += A(x + dx, y + dy) < 128 ? 1 : 0;
+          const n = Math.sin(x * 0.21 + Math.sin(y * 0.13) * 2.0) * 0.5 + Math.sin(y * 0.17 + x * 0.05) * 0.5;   // soft wash variation
+          let v = 0.94 + 0.07 * n + 0.12 * (1 - y / N) - 0.2 * Math.min(1, e / 3);                               // lighter top, pooled edge
+          if (R() < 0.035) v += 0.25;                                                                              // paper flecks
+          v = Math.max(0, Math.min(1.25, v)) / 1.25 * 255;
+          o[k] = o[k + 1] = o[k + 2] = v; o[k + 3] = a;
+        }
+        g.putImageData(out, 0, 0); const tx = new T.CanvasTexture(c); tx.anisotropy = 4; return tx; };
+      const billboard = sh => {   // face the camera; turn each blot by a per-instance angle so the shapes don't repeat
+        sh.vertexShader = sh.vertexShader.replace('#include <project_vertex>', `
+  vec4 bbC = modelMatrix * instanceMatrix * vec4(0.0, 0.0, 0.0, 1.0);
+  float bbS = length(instanceMatrix[0].xyz), bbA = fract(sin(dot(bbC.xyz, vec3(12.9898, 78.233, 37.719))) * 43758.5453) * 6.2832;
+  vec2 bbP = mat2(cos(bbA), sin(bbA), -sin(bbA), cos(bbA)) * position.xy * bbS;
+  vec4 mvPosition = viewMatrix * bbC + vec4(bbP, 0.0, 0.0);
+  gl_Position = projectionMatrix * mvPosition;
+  // bbdone`);
+      };
+      const washGeo = new T.PlaneGeometry(1, 1);
+      const mkWash = (list, tex) => {
+        if (!list.length) return;
+        const mats = see3(new T.MeshBasicMaterial({ color: 0xffffff, map: tex, alphaTest: 0.5, side: T.DoubleSide }), billboard);
+        const im = new T.InstancedMesh(washGeo, mats[0], list.length);
+        list.forEach(([p, sz, c, shade], k) => {
+          o.position.set(...p); o.rotation.set(0, 0, 0); o.scale.setScalar(sz * 1.25); o.updateMatrix();
+          im.setMatrixAt(k, o.matrix); im.setColorAt(k, col.setHex(c).multiplyScalar(shade * 1.08).lerp(PAPER, 0.16 + 0.12 * RC()));
+        });
+        im.instanceMatrix.needsUpdate = true; im.instanceColor.needsUpdate = true; im.castShadow = false; im.receiveShadow = false; im.frustumCulled = false; site.add(im);
+        ghostIM(im, mats);
+      };
       const pineCards = [], oakCards = [];
       all.forEach(([p, sz, flat, c, shade, sp]) => {
         const n = 2;
@@ -1044,7 +1090,7 @@ float seeAlpha() {
           (sp === 'ponderosa' ? pineCards : oakCards).push([q, sz * (1.35 + RC() * 0.5), c, shade * (0.85 + RC() * 0.3)]);
         }
       });
-      mkCards(pineCards, cardTex(false)); mkCards(oakCards, cardTex(true));
+      mkWash(pineCards, washTex(true)); mkWash(oakCards, washTex(false));
       const lg = new T.CylinderGeometry(0.7, 1, 1, 6); lg.translate(0, 0.5, 0);
       const limbMats = see3(STD({ color: 0xffffff, map: barkTex }));
       const lm = new T.InstancedMesh(lg, limbMats[0], limbs.length), q = new T.Quaternion(), dv = new T.Vector3();
