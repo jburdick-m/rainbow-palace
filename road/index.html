@@ -710,7 +710,8 @@ Back lean-to ${S.L}′ × ${P.back_lt.depth}′`,
         g.setIndex(new T.BufferAttribute(m.w === 4 ? new Uint32Array(b64(m.i)) : new Uint16Array(b64(m.i)), 1));
         g.computeVertexNormals();
         add(m, new T.Mesh(g, STD(Object.assign({ color: 0xffffff, vertexColors: true, roughness: m.rough || 0.6 },
-          m.opacity ? { transparent: true, opacity: m.opacity, depthWrite: false, side: T.DoubleSide } : {}))));
+          m.opacity ? { transparent: true, opacity: m.opacity, depthWrite: false, side: T.DoubleSide } : {},
+          m.glow ? { emissive: new T.Color(m.glow), emissiveIntensity: 1.1, side: T.DoubleSide } : {}))));
         return;
       }
       const material = materialFor(m);
