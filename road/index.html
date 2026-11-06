@@ -235,6 +235,7 @@ figcaption b { font:400 14px var(--font-display); letter-spacing:.08em; text-tra
       <label class="chip-t"><input type="checkbox" id="L-vehicles" checked><span>Vehicles</span></label>
       <label class="chip-t"><input type="checkbox" id="L-site" checked><span>Site</span></label>
       <label class="chip-t"><input type="checkbox" id="L-xray"><span>X-ray</span></label>
+      <button class="btn" data-view="frame">Frame only</button>
     </div>
     <div class="tgroup" role="group" aria-label="Views">
       <span class="eyebrow">View</span>
@@ -243,8 +244,7 @@ figcaption b { font:400 14px var(--font-display); letter-spacing:.08em; text-tra
       <button class="btn" data-view="storm">Storm end (SW)</button>
       <button class="btn" data-view="road">Back (N)</button>
       <button class="btn" data-view="top">Top</button>
-      <button class="btn" data-view="frame">Frame only</button>
-      <button class="btn" data-view="site">Whole site</button>
+      <button class="btn" data-view="site">Property birds-eye</button>
     </div>
     <div class="tgroup" role="group" aria-label="Explore">
       <span class="eyebrow" aria-hidden="true"></span>
@@ -1031,7 +1031,7 @@ float seeAlpha() { return vFade * smoothstep(1.5, 4.0, length(vSeeV)); }   // th
             if (e && ((i + j) % (pine ? 2 : st))) return;
             const k = j * CAN.nx + i, top = cChm[k] * CAN.scale; if (top < 4) return;
             const cx = CAN.x0 + i * CAN.cell + (R() - 0.5) * CAN.cell * 0.7, cz = CAN.z0 + j * CAN.cell + (R() - 0.5) * CAN.cell * 0.7, g = siteH(cx, cz);
-            let bot = cCb[k] * CAN.scale; if (!(bot > 2) || bot > top - 2) bot = Math.max(2, Math.min(top - 3, t.base || top * 0.5));
+            let bot = cCb[k] * CAN.scale; if (bot > top - 2) bot = Math.max(2, top - 3); else if (!(bot > 2)) bot = Math.max(2, Math.min(top - 3, t.base || top * 0.5));   // a thin layer (over a roof) stays thin
             const depth = top - bot, s0 = step * (pine ? 1.3 : 1.3) + (e ? 0.6 : 0);
             add(cx, g + top - Math.min(depth * 0.28, s0 * 0.32), cz, s0 * (pine ? 1.12 : 1.0) * (0.9 + R() * 0.2), pine ? 0.72 : 0.82, 1.04);
             if (pine) {   // tiers of tufts down the crown's flank, with gaps between them
@@ -1181,7 +1181,8 @@ float seeAlpha() { return vFade * smoothstep(1.5, 4.0, length(vSeeV)); }   // th
     const cam = (MODEL.page && MODEL.page.site === 'house') ? { th: -0.466, ph: 1.225, r: 58.4 } : { th: 0, ph: 1.24, r: 58 };   // house site: the owner's chosen three-quarter view of the open front; road site: the open front
     const CAM0 = { ...cam };
     const VIEWS = { yard: { th: -0.785, ph: 1.16, r: 66 }, front: { th: 0, ph: 1.24, r: 58 }, storm: { th: -1.571, ph: 1.2, r: 58 },
-      road: { th: 2.356, ph: 1.18, r: 66 }, top: { th: 0, ph: 0.02, r: 78 }, site: { th: -0.6, ph: 0.98, r: 520 } };
+      road: { th: 2.356, ph: 1.18, r: 66 }, top: { th: 0, ph: 0.02, r: 78 }, site: { th: 1.571, ph: 0.02, r: 610 } };   // straight down over the whole property (house site: the owner's framing)
+    if (!(MODEL.page && MODEL.page.site === 'house')) { const Bb = ((MODEL.site && MODEL.site.bearing) || 37.5) * Math.PI / 180; VIEWS.site.th = Math.atan2(-Math.cos(Bb), Math.sin(Bb)); VIEWS.site.r = 520; }   // road site: north up
     {   // view names carry the compass point the camera looks from, worked out from the site's grid bearing
       const pt8 = b => ['N', 'NE', 'E', 'SE', 'S', 'SW', 'W', 'NW'][Math.round((((b % 360) + 360) % 360) / 45) % 8], house = MODEL.page && MODEL.page.site === 'house';
       const NM = { yard: 'Yard', front: 'Open front', storm: house ? 'Tractor end' : 'Storm end', road: 'Back' };
