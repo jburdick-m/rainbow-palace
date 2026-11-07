@@ -248,7 +248,7 @@ figcaption b { font:400 14px var(--font-display); letter-spacing:.08em; text-tra
     </div>
     <div class="tgroup" role="group" aria-label="Explore">
       <span class="eyebrow" aria-hidden="true"></span>
-      <button class="btn" id="freeBtn" aria-pressed="false" aria-label="Free pan: drag to move around the site, scroll or pinch to zoom">Free pan</button>
+      <button class="btn" id="freeBtn" aria-pressed="false" aria-label="Free pan: drag to move around the site, shift-drag to tilt and turn, scroll or pinch to zoom">Free pan</button>
       <button class="btn" id="doorsBtn">Close doors</button>
     </div>
   </div>
@@ -1276,7 +1276,7 @@ float seeAlpha() { return vFade * smoothstep(1.5, 4.0, length(vSeeV)); }   // th
     };
 
     // pointer: left drag orbits, right or shift drag slides the target, pinch zooms. Free pan: drag pans,
-    // right/ctrl/shift drag orbits, the wheel zooms toward the pointer; on touch two fingers pinch, twist and tilt.
+    // shift (or right/ctrl/alt) drag tilts and turns, switching live as shift is pressed or let go, the wheel zooms toward the pointer; on touch two fingers pinch, twist and tilt.
     const ptrs = new Map(); let mode = '', g0 = null;
     const pair = () => { const [a, b] = [...ptrs.values()]; return { x: (a.x + b.x) / 2, y: (a.y + b.y) / 2, d: Math.max(1, Math.hypot(b.x - a.x, b.y - a.y)), a: Math.atan2(b.y - a.y, b.x - a.x) }; };
     const startOne = (x, y, alt) => {
@@ -1289,12 +1289,16 @@ float seeAlpha() { return vFade * smoothstep(1.5, 4.0, length(vSeeV)); }   // th
       try { cv.setPointerCapture(e.pointerId); } catch (_) { /* pointer already gone */ }
       ptrs.set(e.pointerId, { x: e.clientX, y: e.clientY });
       if (ptrs.size === 2) { mode = 'two'; g0 = pair(); }
-      else if (ptrs.size === 1) startOne(e.clientX, e.clientY, e.button === 2 || e.shiftKey || e.ctrlKey || e.metaKey);
+      else if (ptrs.size === 1) startOne(e.clientX, e.clientY, e.button === 2 || e.shiftKey || e.ctrlKey || e.metaKey || e.altKey);
     });
     cv.addEventListener('pointermove', e => {
       const prev = ptrs.get(e.pointerId); if (!prev) return;
       const px = prev.x, py = prev.y, dx = e.clientX - px, dy = e.clientY - py;
       ptrs.set(e.pointerId, { x: e.clientX, y: e.clientY });
+      if (free && ptrs.size === 1 && (mode === 'pan' || mode === 'orbit')) {   // free pan: holding shift (or ctrl/alt/right button) mid-drag switches to tilt
+        const want = (e.shiftKey || e.ctrlKey || e.metaKey || e.altKey || (e.buttons & 2)) ? 'orbit' : 'pan';
+        if (want !== mode) { startOne(e.clientX, e.clientY, want === 'orbit'); render(); return; }
+      }
       if (mode === 'two' && ptrs.size === 2) {
         const g = pair();
         let da = g.a - g0.a; while (da > Math.PI) da -= 2 * Math.PI; while (da < -Math.PI) da += 2 * Math.PI;
@@ -1324,7 +1328,7 @@ float seeAlpha() { return vFade * smoothstep(1.5, 4.0, length(vSeeV)); }   // th
       render();
     }, { passive: false });
     const freeBtn = document.getElementById('freeBtn'), hint = document.getElementById('cvhint');
-    const hintFor = touch => { hint.textContent = touch ? 'Drag to pan · pinch to zoom · two fingers to turn' : 'Drag to pan · right-drag to turn · scroll to zoom'; };
+    const hintFor = touch => { hint.textContent = touch ? 'Drag to pan · pinch to zoom · two fingers to turn' : 'Drag to pan · shift-drag to tilt and turn · scroll to zoom'; };
     cv.addEventListener('pointerdown', e => hintFor(e.pointerType === 'touch'));
     const setFree = (on, stay) => {
       free = on; freeBtn.classList.toggle('on', on); freeBtn.setAttribute('aria-pressed', String(on));
