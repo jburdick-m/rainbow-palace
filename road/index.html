@@ -1274,12 +1274,12 @@ float seeAlpha() { return vFade * smoothstep(1.5, 4.0, length(vSeeV)); }   // th
       cam.r = r1;
     };
 
-    // pointer: left drag orbits, right or shift drag slides the target, pinch zooms. Free pan: drag pans,
+    // pointer: any drag orbits the barn (no panning outside free pan), pinch zooms. Free pan: drag pans,
     // shift (or right/ctrl/alt) drag tilts and turns, switching live as shift is pressed or let go, the wheel zooms toward the pointer; on touch two fingers pinch, twist and tilt.
     const ptrs = new Map(); let mode = '', g0 = null;
     const pair = () => { const [a, b] = [...ptrs.values()]; return { x: (a.x + b.x) / 2, y: (a.y + b.y) / 2, d: Math.max(1, Math.hypot(b.x - a.x, b.y - a.y)), a: Math.atan2(b.y - a.y, b.x - a.x) }; };
     const startOne = (x, y, alt) => {
-      mode = free ? (alt ? 'orbit' : 'pan') : (alt ? 'shift' : 'orbit'); grab = null;
+      mode = free ? (alt ? 'orbit' : 'pan') : 'orbit'; grab = null;   // panning only in free pan
       if (mode === 'pan') { place(); grab = groundHit(x, y, new T.Vector3()); if (grab && grab.distanceTo(camera.position) > Math.max(cam.r * 3, 60)) grab = null; }
     };
     cv.addEventListener('contextmenu', e => e.preventDefault());
@@ -1307,10 +1307,7 @@ float seeAlpha() { return vFade * smoothstep(1.5, 4.0, length(vSeeV)); }   // th
         } else cam.r = clamp(cam.r * Math.pow(g0.d / g.d, 1.8), 10, MAXR);
         g0 = g;
       } else if (mode === 'pan') { place(); panTo(e.clientX, e.clientY, px, py); settle(0.15); }
-      else if (mode === 'shift') {
-        const s = cam.r * 0.0016;
-        target.x -= dx * s * Math.cos(cam.th); target.z += dx * s * Math.sin(cam.th); target.y = clamp(target.y + dy * s, HOME.y - 8, HOME.y + 18);
-      } else if (mode === 'orbit') { cam.th -= dx * 0.0075; cam.ph = clamp(cam.ph - dy * 0.0075, 0.02, free ? 1.53 : 1.52); }
+      else if (mode === 'orbit') { cam.th -= dx * 0.0075; cam.ph = clamp(cam.ph - dy * 0.0075, 0.02, free ? 1.53 : 1.52); }
       else return;
       render();
     });
