@@ -211,7 +211,8 @@ figcaption b { font:400 14px var(--font-display); letter-spacing:.08em; text-tra
 .lead { margin:-30px 0 -20px; counter-increment:none; }
 .lead img, .sk img { display:block; width:100%; height:auto; mix-blend-mode:multiply; }
 .sk-grid { display:grid; grid-template-columns:repeat(2, minmax(0,1fr)); gap:18px 40px; }
-.sk-grid .wide { grid-column:1 / -1; }
+.sk-grid .wide { grid-column:1 / -1; width:88%; justify-self:center; }
+@media (max-width:760px) { .sk-grid .wide { width:100%; } }
 .sk-grid .mid { width:100%; max-width:900px; justify-self:center; }
 .sk { gap:2px; counter-increment:none; }
 @media (max-width:760px) { .sk-grid { grid-template-columns:minmax(0,1fr); } }
@@ -280,7 +281,7 @@ figcaption b { font:400 14px var(--font-display); letter-spacing:.08em; text-tra
     <figure class="sk wide"><img src="img/back.webp" width="2000" height="1111" loading="lazy" alt="Watercolor sketch of the barn's back lean-to full of firewood, the house behind it with one car in the drive"></figure>
     <figure class="sk wide"><img src="img/coop.webp" width="2000" height="909" loading="lazy" alt="Watercolor sketch looking past the chicken coop and run, chickens out front, to the back of the barn and its woodpile, the house and two cars in the drive fading out beyond and the tiny house at the left edge"></figure>
     <figure class="sk wide"><img src="img/elevation_bare.webp" width="2000" height="911" loading="lazy" alt="Watercolor front elevation of the barn, doors open, tractor in one lean-to and firewood in the other"></figure>
-    <figure class="sk wide"><img src="img/frame.webp" width="2000" height="1333" loading="lazy" alt="Watercolor sketch of the bare cedar pole frame"></figure>
+    <figure class="sk wide"><img src="img/frame.webp" width="2000" height="1043" loading="lazy" alt="Watercolor sketch of the bare cedar pole frame"></figure>
   </div><!--/SKETCHES-->
 </section>
 
