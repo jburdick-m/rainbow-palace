@@ -1,0 +1,385 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Live Oak</title>
+<meta name="description" content="A 3D model of the barn on its site.">
+<meta property="og:title" content="Rainbow Palace · property model">
+<meta property="og:description" content="Fly over and walk the land in 3D: lidar terrain and trees, the house site and the public trails up the hill.">
+<meta name="theme-color" content="#F6F1E6">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%238B3A1D'/%3E%3Cpath d='M4 25 L12.5 11 L17.5 18 L20.5 14 L28 25 Z' fill='%23F6F1E6'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Marcellus&text=LIVEOAK&display=swap">   
+<style>
+  
+  :root {
+    --paper: #F6F1E6; --sheet: #FFFFFF; --ink: #1C2A2E; --muted: #56676B; --rule: rgba(28, 42, 46, 0.13); --rule-strong: rgba(28, 42, 46, 0.3);
+    --cedar: #8B3A1D; --cedar-soft: #F1E1D8;
+    --font-display: "Jost", "Futura", "Century Gothic", sans-serif;
+    --font-logo: "Marcellus", "Jost", serif;
+    --font-body: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+    --glass: rgba(250, 247, 240, 0.9); --shadow: 0 8px 28px rgba(22, 32, 34, 0.16), 0 1px 3px rgba(22, 32, 34, 0.1);
+    --bg: var(--paper); --panel: var(--glass); --fg: var(--ink); --mut: var(--muted); --acc: var(--cedar); --line: var(--rule);
+    color-scheme: light;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; height: 100%; background: var(--paper); color: var(--ink); font: 400 13px/1.4 var(--font-body); overflow: hidden; -webkit-font-smoothing: antialiased; }
+  #c { display: block; width: 100vw; height: 100vh; touch-action: none; cursor: grab; outline: none; }
+  #c.grabbing { cursor: grabbing; }
+  #c:focus-visible { box-shadow: inset 0 0 0 2px var(--cedar); }
+  button { font: inherit; color: inherit; }
+  kbd { display: inline-block; min-width: 18px; padding: 1px 5px; border: 1px solid var(--rule-strong); border-bottom-width: 2px; border-radius: 4px; background: var(--sheet); font: 500 11px/15px var(--font-body); text-align: center; color: var(--ink); }
+  .eyebrow { font: 500 10px/1.2 var(--font-display); letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted); }
+  .panel { position: absolute; background: var(--glass); border: 1px solid rgba(28, 42, 46, 0.1); border-radius: 10px; box-shadow: var(--shadow);
+    -webkit-backdrop-filter: blur(10px) saturate(1.1); backdrop-filter: blur(10px) saturate(1.1); }
+
+  
+  #logo { position: absolute; top: 12px; left: 16px; z-index: 3; display: flex; align-items: center; gap: .26em; pointer-events: none; user-select: none;
+    font: 400 24.8px/1 var(--font-logo); letter-spacing: .03em; color: #FBF8F1; text-shadow: 0 1px 2px rgba(10, 16, 18, 0.75), 0 0 12px rgba(10, 16, 18, 0.45); }
+  #logo .lw, #load .lw { font-weight: 400; margin-right: -.03em; }   
+  #logo .lo, #load .lo { font-weight: 400; }
+  #logo svg { width: .98em; height: .98em; flex: none; filter: drop-shadow(0 1px 2px rgba(10, 16, 18, 0.55)); }
+  body.navlock #logo { opacity: 0; pointer-events: none; }   
+
+  
+  
+  #ui { top: auto; bottom: 12px; left: 12px; width: 272px; max-width: calc(100vw - 24px); max-height: calc(100vh - 70px); display: flex; flex-direction: column-reverse; overflow: hidden; z-index: 3; }
+  #ui .hd { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 13px 10px 11px 16px; }
+  #ui h1 { font: 300 24px/1.05 var(--font-display); letter-spacing: 0.02em; margin: 3px 0 0; white-space: nowrap; }
+  .ib { flex: none; width: 32px; height: 32px; border-radius: 50%; border: 1px solid transparent; background: transparent; cursor: pointer; display: grid; place-items: center; color: var(--muted); padding: 0; }
+  .ib:hover { background: rgba(28, 42, 46, 0.06); color: var(--ink); }
+  .ib svg { width: 18px; height: 18px; transition: transform 0.2s; }
+  #ui .ib svg { transform: rotate(180deg); }          
+  #ui.folded .ib svg { transform: none; }              
+  #uiBody { overflow-y: auto; overscroll-behavior: contain; border-bottom: 1px solid var(--rule); scrollbar-width: thin; }
+  #ui.folded #uiBody { display: none; }
+  
+  #ui .optl { display: block; font: 500 12px/1 var(--font-display); letter-spacing: 0.16em; text-transform: uppercase; color: var(--ink); }
+  #ui.folded { top: auto; bottom: 12px; width: auto; }
+  #ui.folded .brand > * { display: none; }
+  #ui.folded .optl { display: block; }
+  #ui.folded .hd { padding: 6px 4px 6px 14px; gap: 4px; }
+  .grp { border-bottom: 1px solid var(--rule); }
+  
+  #uiTop:empty { display: none; }
+  #uiTop { padding: 10px 16px 4px; }
+  #ui button.topb { width: 100%; margin: 0 0 6px; padding: 8px 10px; font-weight: 500; }
+  #ui label.row.more > span:empty { display: none; }
+  #ui label.row.more select { width: 100%; }
+  #stats, #ui .gpuLine { display: none; }
+  body.fpsOn #stats, body.fpsOn #ui .gpuLine { display: block; }
+  body:not(.navlock) #fps { right: 64px !important; }
+  #ui .about { margin-top: 10px; }
+  .grp[hidden] { display: none; }
+  .grp > .gh { width: 100%; display: flex; align-items: center; justify-content: space-between; padding: 11px 16px; border: 0; background: none; cursor: pointer;
+    font: 500 11px/1 var(--font-display); letter-spacing: 0.16em; text-transform: uppercase; color: var(--muted); text-align: left; }
+  .grp > .gh::after { content: ''; width: 6px; height: 6px; margin-right: 3px; border-right: 1.5px solid currentColor; border-bottom: 1.5px solid currentColor; transform: rotate(-45deg); transition: transform 0.15s; }
+  .grp.open > .gh::after { transform: rotate(45deg); }
+  .grp > .gh:hover, .grp.open > .gh { color: var(--ink); }
+  .grp > .gb { display: none; padding: 0 16px 14px; }
+  .grp.open > .gb { display: block; }
+  #ui label:not(.row) { display: flex; align-items: center; gap: 8px; margin: 6px 0; cursor: pointer; user-select: none; }
+  #ui input[type=checkbox], #ui input[type=range] { accent-color: var(--cedar); margin: 0; }
+  #ui input[type=range] { width: 100%; margin-top: 4px; }
+  #ui .row { display: flex; justify-content: space-between; align-items: center; gap: 10px; color: var(--muted); margin: 8px 0 0; }
+  #ui select { font: inherit; color: var(--ink); background: var(--sheet); border: 1px solid var(--rule-strong); border-radius: 6px; padding: 4px 6px; max-width: 64%; min-width: 0; }
+  #ui button:not(.gh):not(.ib):not(.chip) { background: var(--sheet); border: 1px solid var(--rule-strong); border-radius: 6px; padding: 6px 10px; margin: 3px 4px 3px 0; cursor: pointer; line-height: 1.15; }
+  #ui button:not(.gh):not(.ib):hover { border-color: var(--ink); }
+  #ui button:disabled { opacity: 0.45; cursor: default; }
+  #ui a { color: var(--cedar); }
+  .two { display: grid; grid-template-columns: 1fr 1fr; column-gap: 8px; }
+  .two .span2 { grid-column: 1 / -1; }
+  .lg { display: inline-block; width: 14px; height: 4px; border-radius: 2px; margin-left: -2px; }
+  .sw { display: inline-block; width: 11px; height: 11px; border-radius: 3px; flex: none; }
+  #legend { display: none; margin: 2px 0 6px 24px; font-size: 12px; columns: 2; column-gap: 10px; }
+  #legend div { display: flex; align-items: center; gap: 6px; margin: 2px 0; break-inside: avoid; text-transform: capitalize; }
+  .acts { display: flex; flex-wrap: wrap; margin: 6px 0 2px; }
+  .gm .modsec + .modsec, .gb > .gm:not(:empty) + * { margin-top: 10px; }
+  .modsec { padding-top: 2px; }
+  .modsec + .modsec { padding-top: 10px; border-top: 1px dashed var(--rule); }
+  .modh { font-weight: 500; color: var(--muted); margin: 0 0 4px; }
+  #ui .hint { color: var(--muted); font-size: 11.5px; margin-top: 6px; }
+  #stats { color: var(--muted); font-size: 11px; font-variant-numeric: tabular-nums; margin-top: 10px; }
+  #ui .ft { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 9px 12px 10px 16px; font-size: 10.5px; line-height: 1.35; color: var(--muted); }
+  #ui .ft button { flex: none; margin: 0 !important; padding: 5px 9px !important; }
+
+  
+  #tools { position: absolute; top: 12px; right: 12px; display: flex; flex-direction: column; gap: 7px; z-index: 3; }
+  #tools .tb { width: 40px; height: 40px; border-radius: 50%; display: grid; place-items: center; padding: 0; cursor: pointer; background: var(--glass);
+    border: 1px solid rgba(28, 42, 46, 0.12); box-shadow: 0 2px 10px rgba(22, 32, 34, 0.16); color: var(--ink); font: 400 21px/1 var(--font-body);
+    -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); }
+  #tools .tb:hover { background: var(--sheet); }
+  #tools .tb svg { width: 21px; height: 21px; }
+  #tools .tb.q { font: 600 18px/1 var(--font-body); color: var(--ink); }
+  #tools .gap { height: 3px; }
+  #needle { transform-origin: 20px 20px; transform-box: view-box; }
+  body.navlock #tools, body.navlock #hint { display: none; }   
+  #info { right: 64px; top: 12px; width: 280px; max-width: calc(100vw - 88px); padding: 14px 16px 13px; display: none; z-index: 3; }
+  #info h2 { font: 400 19px/1.2 var(--font-display); letter-spacing: 0.01em; margin: 0 26px 8px 0; display: flex; align-items: center; gap: 9px; }
+  #info p { margin: 3px 0; }
+  #info .mut { color: var(--muted); }
+  #info a { color: var(--cedar); }
+  #info .badge { display: inline-block; margin-top: 9px; font: 500 10px/1 var(--font-display); letter-spacing: 0.14em; text-transform: uppercase; color: var(--cedar); background: var(--cedar-soft); padding: 5px 8px; border-radius: 3px; }
+  #info details { margin-top: 9px; font-size: 12px; color: var(--muted); }
+  #info summary { cursor: pointer; }
+  #info details div { margin: 2px 0; font-variant-numeric: tabular-nums; }
+  .x { position: absolute; top: 8px; right: 8px; width: 28px; height: 28px; border: 0; border-radius: 50%; background: transparent; cursor: pointer; font: 400 20px/1 var(--font-body); color: var(--muted); padding: 0; }
+  .x:hover { background: rgba(28, 42, 46, 0.07); color: var(--ink); }
+
+  
+  #load { position: fixed; inset: 0; z-index: 20; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center;
+    background: radial-gradient(ellipse at 50% 40%, #FBF8F1 0%, var(--paper) 55%, #ECE5D6 100%); color: var(--muted); font-size: 13px; transition: opacity 0.6s ease; }
+  #load .ld-brand { position: absolute; left: 16px; right: 16px; bottom: calc(50% + 28px); }
+  #load .ld-title { font: 400 clamp(34px, 7vw, 54px)/1 var(--font-logo); letter-spacing: 0.005em; color: var(--ink); margin-top: 8px; }
+  #load .ld-sub { margin-top: 10px; font-size: 13px; }
+  #loadMsg { position: absolute; left: 16px; right: 16px; top: calc(50% - 6px); }
+  #load.done { opacity: 0; pointer-events: none; }
+  #load.err { pointer-events: auto; white-space: pre-wrap; color: var(--ink); padding: 24px; line-height: 1.5; }
+  #load.err .ld-card { white-space: normal; }
+  body #pvbar .t { background: rgba(28, 42, 46, 0.14); }   
+  body #pvbar { color: var(--muted); }
+  .ld-card { max-width: 460px; margin: 16px; padding: 22px 24px 20px; text-align: left; background: var(--sheet); border: 1px solid var(--rule); border-radius: 10px; box-shadow: var(--shadow); color: var(--ink); }
+  .ld-card h2 { font: 400 24px/1.15 var(--font-display); margin: 8px 0 8px; }
+  .ld-card p { margin: 0 0 12px; color: var(--muted); line-height: 1.5; }
+  .ld-card details { margin: 0 0 14px; font-size: 12px; color: var(--muted); }
+  .ld-card pre { white-space: pre-wrap; word-break: break-word; margin: 6px 0 0; font-size: 11.5px; }
+  .ld-card button { background: var(--ink); color: #fff; border: 0; border-radius: 6px; padding: 8px 14px; cursor: pointer; }
+
+  
+  
+  #help { position: fixed; inset: 0; z-index: 10; pointer-events: none; }
+  #help[hidden] { display: none; }
+  #help .sheet { position: absolute; right: 18px; top: 50%; transform: translateY(-50%); width: max-content; max-width: min(320px, calc(100vw - 36px)); max-height: calc(100vh - 140px); overflow-y: auto;
+    pointer-events: auto; background: rgba(18,22,26,0.7); border: 1px solid rgba(255,255,255,0.12); border-radius: 8px; backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+    color: #e8ecef; font: 12.5px/1.35 system-ui, -apple-system, "Segoe UI", sans-serif; padding: 10px 14px 12px; }
+  #help .x { position: absolute; right: 6px; top: 4px; border: 0; background: none; color: #9aa6ae; font-size: 16px; cursor: pointer; }
+  #help h2 { font: 600 13px/1.2 system-ui, -apple-system, "Segoe UI", sans-serif; margin: 0 22px 8px 0; color: #fff; }
+  #help h3 { font: 500 10px/1 system-ui, sans-serif; letter-spacing: 0.12em; text-transform: uppercase; color: #9aa6ae; margin: 8px 0 6px; }
+
+  #help .cols { display: block; }
+  #help dl { margin: 0; display: grid; grid-template-columns: auto 1fr; gap: 3px 10px; align-items: center; }
+  #help dt { white-space: nowrap; font-weight: 500; justify-self: end; }
+  #help dd { margin: 0; color: #e8ecef; }
+  #help .about { margin: 18px 0 0; padding-top: 14px; border-top: 1px solid var(--rule); color: var(--muted); font-size: 12px; line-height: 1.5; }
+  #help a, #help .lnk { color: var(--cedar); }
+  #help .lnk { border: 0; background: none; padding: 0; font: inherit; text-decoration: underline; cursor: pointer; }
+  #toast { position: fixed; left: 50%; top: 14px; z-index: 12; transform: translate(-50%, -8px); opacity: 0; pointer-events: none; transition: opacity 0.25s, transform 0.25s;
+    background: var(--ink); color: #fff; padding: 8px 14px; border-radius: 999px; box-shadow: var(--shadow); max-width: calc(100vw - 32px); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  #toast.on { opacity: 1; transform: translate(-50%, 0); }
+  #hint { position: fixed; left: 50%; bottom: 20px; z-index: 2; transform: translate(-50%, 8px); opacity: 0; pointer-events: none; transition: opacity 0.5s, transform 0.5s;
+    background: var(--glass); color: var(--ink); padding: 8px 14px; border-radius: 999px; box-shadow: var(--shadow); white-space: nowrap; max-width: calc(100vw - 32px); overflow: hidden; text-overflow: ellipsis; }
+  #hint.on { opacity: 1; transform: translate(-50%, 0); }
+
+  
+  @media (max-width: 640px) {
+    #logo { font-size: 19.2px; }
+    #ui { top: auto; bottom: max(10px, env(safe-area-inset-bottom)); left: 10px; right: 10px; width: auto; max-height: 58vh; }
+    #ui h1 { font-size: 21px; }
+    #tools { top: max(10px, env(safe-area-inset-top)); right: 10px; }
+    #info { top: max(10px, env(safe-area-inset-top)); left: 10px; right: 62px; width: auto; max-width: none; }
+    #hint { bottom: calc(var(--sheet-top, 74px) + 12px); width: max-content; white-space: normal; text-align: center; border-radius: 14px; }   
+    #ui .ft .lw { display: none; }   
+  }
+  
+  @media (max-height: 520px) and (min-width: 641px) {
+    #ui.folded { width: auto; }
+    #ui.folded .hd { padding: 7px 4px 5px 14px; }
+    #ui.folded .eyebrow, #ui.folded .ft button { display: none; }
+    #ui.folded h1 { font-size: 19px; margin: 0; }
+    #ui.folded .ft { padding: 4px 14px 7px; font-size: 10px; }
+    #ui.folded .ft .lw { display: none; }
+  }
+  @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+  
+
+.lk { display: inline-flex; align-items: center; gap: var(--gap, .22em); line-height: 1; white-space: nowrap; }
+.lk svg { width: var(--ck, .8em); height: var(--ck, .8em); flex: none; transform: translateY(var(--dy, 0)); }
+.lk .ti { position: relative; }
+.lk .ti::after { content: ""; position: absolute; left: .04em; bottom: .965em; width: .15em; height: .15em; border-radius: 55% 45% 55% 45%; background: #E2A63B; }
+
+#load.ls { justify-content: center; color: #56676B; overflow: hidden; }
+#load.ls > * { position: relative; }
+#load.ls .ld-brand { position: relative; inset: auto; }
+#load.ls .ld-title { font-size: calc(clamp(38px, 9.5vw, 78px) * var(--s, 1)); color: #1C2A2E; margin: 0; }
+#load.ls #loadMsg { position: relative; inset: auto; margin-top: 12px; font-size: 13px; }
+#load.ls .ls-bar { width: min(240px, 60vw); height: 3px; border-radius: 2px; background: rgba(28, 42, 46, .12); overflow: hidden; margin-top: clamp(20px, 4vh, 34px); }
+#load.ls .ls-bar i { display: block; height: 100%; width: calc(var(--p, 0) * 100%); border-radius: 2px; background: #CF952B; transition: width .3s ease-out; }
+#load.ls .ls-bytes { margin-top: 3px; min-height: 1.4em; font-size: 11.5px; opacity: .75; font-variant-numeric: tabular-nums; }
+#load.ls .ls-art { position: absolute; pointer-events: none; }
+#pvbar { visibility: hidden; }   
+#load.ls .ld-title .rg { transition: stroke-dashoffset .35s ease-out; }
+@keyframes ls-rec { 0%, 100% { opacity: 1; } 50% { opacity: .62; } }
+@keyframes ls-drift { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+
+#load.ls-B { justify-content: flex-start; padding-top: clamp(40px, 20vh, 190px); background: linear-gradient(180deg, #D6E7F0 0%, #EAF0EA 34%, #F8EEDB 58%, #F6E2B8 100%); }
+#load.ls-B .ls-art { left: 0; right: 0; bottom: 0; height: min(46%, 380px); }
+#load.ls-B .ls-art svg { display: block; width: 100%; height: 100%; }
+#load.ls-B .ls-art .hz { position: absolute; left: 0; top: -8%; width: 200%; height: 70%; opacity: .75; animation: ls-drift 70s linear infinite;
+  background: repeating-linear-gradient(90deg, rgba(255, 244, 218, 0) 0, rgba(255, 244, 218, .85) 12.5%, rgba(255, 244, 218, 0) 25%);
+  -webkit-mask-image: linear-gradient(180deg, transparent, #000 45%, transparent); mask-image: linear-gradient(180deg, transparent, #000 45%, transparent); }
+#load.ls-B .ld-title .heart { animation: ls-rec 2.6s ease-in-out infinite; }
+#load.ls-B .ld-title svg { clip-path: circle(calc(7% + var(--p, 0) * 45%) at 50% 50%); transition: clip-path .4s ease-out; }   
+@media (prefers-reduced-motion: reduce) {
+  
+  #load.ls:not(.ls-force) .ls-bar i, #load.ls:not(.ls-force) .ld-title .rg, #load.ls-B:not(.ls-force) .ld-title svg, #load.ls-C:not(.ls-force) .ld-title svg { transition: none; }
+  #load.ls-B:not(.ls-force) .ls-art .hz, #load.ls-B:not(.ls-force) .ld-title .heart { animation: none; }
+}
+</style>
+<script>window.__lo0={hash:location.hash,search:location.search};</script>
+<script src="../../palace_boot.js"></script><script src="./config.js"></script>   
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://cdn.jsdelivr.net/npm/three@0.186.1/build/three.module.js",
+    "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.186.1/examples/jsm/",
+    "three/examples/jsm/": "https://cdn.jsdelivr.net/npm/three@0.186.1/examples/jsm/",
+    "postprocessing": "https://cdn.jsdelivr.net/npm/postprocessing@6.39.5/build/index.js",
+    "n8ao": "https://cdn.jsdelivr.net/npm/n8ao@2.0.1/dist/N8AO.js",
+    "@sparkjsdev/spark": "https://cdn.jsdelivr.net/npm/@sparkjsdev/spark@2.4.0/dist/spark.module.min.js"
+  }
+}
+</script>
+</head>
+<body>
+<canvas id="c" tabindex="0" aria-label="3D view of the property. Drag to move, right-drag to turn and tilt, scroll to zoom; press ? for all controls."></canvas>
+<div id="load" class="ls ls-B" role="status" aria-live="polite">
+  <div class="ls-art" aria-hidden="true"><svg viewBox="0 0 1200 380" preserveAspectRatio="xMidYMax slice" aria-hidden="true"><defs><linearGradient id="ls-hz" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#F8EEDB" stop-opacity=".55"/><stop offset="1" stop-color="#F8EEDB" stop-opacity="0"/></linearGradient><g id="ls-oak"><path d="M-2.5 0 L-1.6 -22 L-7 -30 L-1 -27 L0 -34 L1.4 -26 L7 -31 L2 -21 L2.8 0 Z" fill="#5A3B26"/><circle cx="-13" cy="-36" r="13" fill="currentColor"/><circle cx="12" cy="-37" r="14" fill="currentColor"/><circle cx="0" cy="-48" r="16" fill="currentColor"/><circle cx="-7" cy="-33" r="11" fill="currentColor"/><circle cx="-5" cy="-52" r="9" fill="#fff" opacity=".16"/><circle cx="13" cy="-40" r="8" fill="#fff" opacity=".1"/></g><g id="ls-pine"><path d="M-1.4 0 L-1 -30 L1 -30 L1.4 0 Z" fill="#5A3B26"/><path d="M0 -78 L9 -52 L4 -53 L13 -32 L6 -33 L15 -14 L-15 -14 L-6 -33 L-13 -32 L-4 -53 L-9 -52 Z" fill="currentColor"/></g></defs><path d="M0 150 C120 118 210 132 320 108 C430 84 520 120 640 104 C770 86 860 60 980 84 C1070 102 1140 92 1200 100 L1200 380 L0 380 Z" fill="#B9CDD6"/><path d="M0 190 C140 160 260 182 400 158 C540 134 640 170 780 150 C900 132 1040 150 1200 128 L1200 380 L0 380 Z" fill="#B7C6B4"/><rect x="0" y="90" width="1200" height="150" fill="url(#ls-hz)"/><path d="M0 248 C160 214 330 236 520 222 C700 208 860 240 1010 222 C1090 212 1150 216 1200 210 L1200 380 L0 380 Z" fill="#D8C182"/><g opacity=".9"><use href="#ls-pine" transform="translate(96 232) scale(1.15)" style="color:#6F8563"/><use href="#ls-oak" transform="translate(190 228) scale(1.05)" style="color:#D7A23C"/><use href="#ls-oak" transform="translate(246 232) scale(.8)" style="color:#7C8F62"/><use href="#ls-oak" transform="translate(455 224) scale(1.2)" style="color:#E3B755"/><use href="#ls-pine" transform="translate(540 222) scale(.95)" style="color:#778C69"/><use href="#ls-oak" transform="translate(760 226) scale(.95)" style="color:#C98C2E"/><use href="#ls-oak" transform="translate(815 230) scale(1.25)" style="color:#DDAA44"/><use href="#ls-pine" transform="translate(985 224) scale(1.2)" style="color:#6F8563"/><use href="#ls-oak" transform="translate(1065 220) scale(1)" style="color:#E3B755"/></g><path d="M0 300 C200 262 380 292 600 276 C800 262 1000 296 1200 268 L1200 380 L0 380 Z" fill="#CDAE66"/><use href="#ls-oak" transform="translate(70 306) scale(2.5)" style="color:#D49A32"/><use href="#ls-oak" transform="translate(1120 296) scale(2.9)" style="color:#DFAE48"/><use href="#ls-oak" transform="translate(905 300) scale(1.7)" style="color:#73875C"/><use href="#ls-oak" transform="translate(330 300) scale(1.6)" style="color:#E6BD5E"/></svg><div class="hz"></div></div>
+  <div class="ld-brand"><div class="ld-title lk" style="font-family:'Marcellus','Jost',serif;letter-spacing:.03em;--s:0.8;--ck:.98em;--gap:.26em;--dy:0em"><span class="lw">Live</span> <svg viewBox="0 0 24 24" aria-hidden="true"><defs><radialGradient id="ls-sheen" cx="40%" cy="35%" r="70%"><stop offset="0" stop-color="#fff" stop-opacity=".22"/><stop offset=".6" stop-color="#fff" stop-opacity="0"/></radialGradient></defs><path d="M22.84 12.00L22.64 13.20L22.53 14.40L22.39 15.64L22.08 16.85L21.35 17.87L20.75 18.98L19.90 19.90L19.01 20.79L18.00 21.55L16.97 22.32L15.78 22.81L14.46 22.76L13.28 23.35L12.00 23.56L10.69 23.62L9.36 23.56L8.12 23.09L7.03 22.32L6.09 21.41L5.37 20.31L4.38 19.62L3.57 18.72L2.98 17.67L2.26 16.69L1.71 15.60L1.15 14.48L0.61 13.28L0.24 12.00L0.18 10.67L0.49 9.37L1.06 8.17L1.71 7.05L2.37 5.95L3.08 4.89L3.92 3.92L4.92 3.12L6.13 2.66L7.16 1.96L8.32 1.47L9.51 1.08L10.77 1.08L12.00 0.96L13.21 1.23L14.39 1.53L15.58 1.76L16.83 1.96L18.11 2.27L19.13 3.06L20.36 3.64L21.24 4.63L21.99 5.72L22.62 6.89L23.04 8.14L23.19 9.45L22.87 10.78L22.84 12.00Z" fill="#5B2D1B"/><path d="M22.44 12.00L22.25 13.15L22.14 14.31L22.02 15.51L21.72 16.68L21.01 17.66L20.44 18.73L19.62 19.62L18.76 20.48L17.79 21.22L16.80 21.96L15.65 22.43L14.37 22.37L13.23 22.95L12.00 23.16L10.73 23.23L9.45 23.18L8.25 22.72L7.20 21.97L6.30 21.07L5.62 20.01L4.66 19.34L3.88 18.48L3.31 17.46L2.61 16.52L2.09 15.47L1.54 14.39L1.01 13.24L0.63 12.00L0.58 10.71L0.88 9.46L1.43 8.30L2.07 7.22L2.71 6.16L3.39 5.13L4.20 4.20L5.17 3.43L6.34 3.00L7.34 2.31L8.45 1.85L9.60 1.47L10.81 1.47L12.00 1.36L13.17 1.62L14.30 1.91L15.45 2.13L16.66 2.32L17.90 2.61L18.88 3.37L20.08 3.92L20.93 4.88L21.66 5.93L22.26 7.06L22.67 8.27L22.80 9.53L22.48 10.82L22.44 12.00Z" fill="none" stroke="#7A3F27" stroke-width="0.5" opacity=".7"/><path d="M21.43 12.85 L22.54 12.68" stroke="#4A1610" stroke-width="0.41" stroke-linecap="round" opacity=".8"/><path d="M19.51 17.17 L21.20 18.16" stroke="#4A1610" stroke-width="0.36" stroke-linecap="round" opacity=".8"/><path d="M15.90 20.88 L16.40 22.42" stroke="#4A1610" stroke-width="0.45" stroke-linecap="round" opacity=".8"/><path d="M11.42 21.52 L11.11 23.48" stroke="#4A1610" stroke-width="0.45" stroke-linecap="round" opacity=".8"/><path d="M6.90 19.40 L6.08 21.10" stroke="#4A1610" stroke-width="0.39" stroke-linecap="round" opacity=".8"/><path d="M4.31 16.69 L2.80 17.25" stroke="#4A1610" stroke-width="0.46" stroke-linecap="round" opacity=".8"/><path d="M2.41 14.17 L1.36 14.71" stroke="#4A1610" stroke-width="0.28" stroke-linecap="round" opacity=".8"/><path d="M3.20 7.93 L1.85 7.06" stroke="#4A1610" stroke-width="0.42" stroke-linecap="round" opacity=".8"/><path d="M6.34 4.80 L5.01 3.25" stroke="#4A1610" stroke-width="0.47" stroke-linecap="round" opacity=".8"/><path d="M10.46 2.52 L10.55 1.10" stroke="#4A1610" stroke-width="0.32" stroke-linecap="round" opacity=".8"/><path d="M14.06 3.42 L14.21 1.64" stroke="#4A1610" stroke-width="0.39" stroke-linecap="round" opacity=".8"/><path d="M18.76 4.26 L19.83 3.40" stroke="#4A1610" stroke-width="0.36" stroke-linecap="round" opacity=".8"/><path d="M20.89 8.65 L22.92 8.16" stroke="#4A1610" stroke-width="0.28" stroke-linecap="round" opacity=".8"/><path d="M21.32 12.00L21.10 13.03L20.70 13.99L20.46 14.96L20.20 15.95L19.59 16.77L18.85 17.46L18.36 18.36L17.98 19.49L17.25 20.36L16.16 20.64L15.04 20.68L14.03 20.90L13.03 21.14L12.00 21.22L10.95 21.36L9.79 21.68L8.63 21.64L7.76 20.80L7.23 19.59L6.68 18.68L5.91 18.09L5.16 17.45L4.59 16.66L3.96 15.87L3.18 15.09L2.66 14.13L2.66 13.05L2.83 12.00L2.73 10.96L2.64 9.86L2.96 8.84L3.50 7.91L3.90 6.91L4.36 5.91L5.26 5.26L6.42 5.01L7.39 4.66L8.12 3.94L8.92 3.20L9.91 2.83L10.96 2.73L12.00 2.70L13.02 2.96L13.92 3.59L14.76 4.11L15.81 4.09L17.09 3.89L18.25 4.17L19.03 4.97L19.66 5.89L20.29 6.79L20.65 7.83L20.65 8.97L20.71 10.01L21.08 10.98L21.32 12.00Z" fill="#E9CFA6"/><path d="M20.88 12.00L20.67 12.98L20.28 13.89L20.05 14.82L19.80 15.76L19.22 16.54L18.51 17.19L18.06 18.06L17.70 19.15L17.02 19.99L15.97 20.25L14.90 20.27L13.93 20.47L12.98 20.71L12.00 20.78L10.99 20.93L9.89 21.25L8.77 21.23L7.95 20.41L7.46 19.22L6.95 18.34L6.21 17.79L5.50 17.18L4.96 16.42L4.35 15.68L3.59 14.94L3.08 14.04L3.09 13.00L3.26 12.00L3.16 11.00L3.06 9.96L3.37 8.98L3.89 8.09L4.27 7.14L4.70 6.18L5.56 5.56L6.69 5.35L7.62 5.03L8.31 4.33L9.06 3.61L10.00 3.26L11.00 3.16L12.00 3.13L12.97 3.39L13.82 4.02L14.62 4.52L15.62 4.49L16.86 4.26L17.98 4.51L18.72 5.28L19.32 6.16L19.92 7.02L20.26 8.02L20.23 9.12L20.29 10.11L20.64 11.03L20.88 12.00Z" fill="none" stroke="#D6B488" stroke-width="0.35" opacity="0.8"/><path d="M20.45 12.00L20.24 12.93L19.85 13.79L19.64 14.67L19.41 15.57L18.85 16.31L18.17 16.92L17.75 17.75L17.43 18.81L16.79 19.62L15.78 19.85L14.75 19.86L13.84 20.05L12.93 20.28L12.00 20.35L11.04 20.50L9.98 20.83L8.91 20.82L8.14 20.02L7.69 18.85L7.22 18.00L6.52 17.48L5.84 16.91L5.33 16.19L4.74 15.49L4.00 14.80L3.51 13.94L3.52 12.95L3.70 12.00L3.59 11.05L3.49 10.06L3.78 9.12L4.28 8.28L4.63 7.37L5.04 6.45L5.87 5.87L6.97 5.69L7.85 5.40L8.49 4.72L9.21 4.02L10.10 3.68L11.05 3.59L12.00 3.57L12.92 3.83L13.73 4.44L14.48 4.93L15.43 4.88L16.63 4.63L17.71 4.85L18.41 5.59L18.98 6.44L19.55 7.25L19.87 8.21L19.82 9.26L19.86 10.21L20.21 11.07L20.45 12.00Z" fill="none" stroke="#D6B488" stroke-width="0.35" opacity="0.8"/><path class="heart" d="M20.08 12.00L19.87 12.89L19.49 13.71L19.28 14.55L19.08 15.41L18.54 16.11L17.88 16.69L17.48 17.48L17.20 18.52L16.59 19.31L15.62 19.52L14.63 19.51L13.75 19.69L12.89 19.91L12.00 19.98L11.08 20.13L10.07 20.47L9.04 20.47L8.30 19.68L7.89 18.54L7.45 17.71L6.79 17.21L6.13 16.68L5.64 15.99L5.08 15.33L4.35 14.68L3.87 13.86L3.89 12.91L4.07 12.00L3.97 11.09L3.85 10.14L4.14 9.25L4.62 8.45L4.95 7.57L5.33 6.68L6.14 6.14L7.20 5.98L8.05 5.71L8.66 5.06L9.33 4.37L10.18 4.05L11.09 3.96L12.00 3.94L12.88 4.20L13.64 4.80L14.35 5.28L15.27 5.21L16.43 4.95L17.47 5.14L18.15 5.85L18.69 6.67L19.24 7.45L19.53 8.37L19.47 9.39L19.50 10.29L19.84 11.12L20.08 12.00Z" fill="#E0412F"/><path d="M13.56 11.50L13.53 11.59L13.49 11.67L13.47 11.76L13.44 11.85L13.39 11.92L13.32 11.98L13.28 12.07L13.25 12.18L13.19 12.26L13.09 12.29L12.99 12.29L12.89 12.32L12.80 12.35L12.71 12.36L12.61 12.38L12.49 12.42L12.38 12.43L12.30 12.34L12.25 12.22L12.20 12.12L12.13 12.07L12.06 12.01L12.01 11.93L11.95 11.86L11.88 11.78L11.83 11.69L11.84 11.59L11.87 11.50L11.86 11.40L11.85 11.30L11.89 11.21L11.94 11.13L11.97 11.04L12.01 10.94L12.09 10.88L12.20 10.87L12.29 10.83L12.35 10.76L12.42 10.68L12.51 10.64L12.61 10.63L12.71 10.62L12.80 10.64L12.89 10.71L12.97 10.76L13.07 10.75L13.20 10.72L13.31 10.74L13.38 10.82L13.44 10.91L13.50 11.00L13.52 11.10L13.51 11.21L13.51 11.31L13.54 11.40L13.56 11.50Z" fill="none" stroke="#A9271C" stroke-width="0.35" opacity="0.69"/><path d="M14.94 11.60L14.88 11.86L14.76 12.10L14.70 12.34L14.63 12.59L14.46 12.79L14.26 12.95L14.14 13.17L14.05 13.45L13.86 13.66L13.58 13.71L13.30 13.70L13.05 13.74L12.81 13.79L12.56 13.81L12.31 13.85L12.03 13.95L11.74 13.95L11.53 13.74L11.41 13.43L11.28 13.21L11.08 13.08L10.88 12.94L10.73 12.75L10.56 12.56L10.33 12.38L10.18 12.14L10.18 11.86L10.23 11.60L10.20 11.33L10.17 11.05L10.26 10.79L10.41 10.56L10.52 10.31L10.64 10.06L10.88 9.92L11.20 9.88L11.45 9.82L11.63 9.64L11.82 9.46L12.06 9.38L12.31 9.37L12.56 9.36L12.81 9.43L13.02 9.60L13.22 9.72L13.48 9.70L13.81 9.61L14.11 9.65L14.32 9.85L14.48 10.07L14.65 10.28L14.75 10.54L14.75 10.83L14.76 11.09L14.87 11.34L14.94 11.60Z" fill="none" stroke="#A9271C" stroke-width="0.43" opacity="0.84"/><path d="M16.27 11.70L16.18 12.12L16.00 12.51L15.91 12.92L15.80 13.32L15.54 13.65L15.21 13.92L15.01 14.29L14.86 14.76L14.56 15.10L14.10 15.18L13.63 15.15L13.23 15.21L12.83 15.29L12.42 15.31L12.01 15.36L11.55 15.51L11.09 15.51L10.76 15.16L10.57 14.65L10.36 14.29L10.04 14.08L9.73 13.85L9.49 13.54L9.20 13.25L8.84 12.95L8.59 12.57L8.58 12.13L8.65 11.70L8.59 11.27L8.53 10.81L8.66 10.38L8.90 10.00L9.07 9.59L9.26 9.17L9.65 8.93L10.17 8.87L10.58 8.77L10.87 8.48L11.20 8.19L11.59 8.06L12.01 8.04L12.42 8.05L12.82 8.18L13.16 8.45L13.48 8.67L13.90 8.64L14.43 8.51L14.91 8.58L15.23 8.89L15.49 9.25L15.77 9.60L15.93 10.01L15.92 10.47L15.96 10.89L16.14 11.28L16.27 11.70Z" fill="none" stroke="#A9271C" stroke-width="0.52" opacity="0.86"/><path d="M17.39 11.80L17.29 12.36L17.08 12.89L16.98 13.44L16.88 14.01L16.55 14.48L16.14 14.88L15.90 15.41L15.72 16.11L15.32 16.63L14.68 16.78L14.02 16.76L13.44 16.86L12.87 16.99L12.28 17.01L11.69 17.07L11.04 17.26L10.38 17.22L9.93 16.69L9.68 15.93L9.42 15.39L9.02 15.07L8.62 14.72L8.32 14.29L7.97 13.88L7.51 13.47L7.19 12.96L7.18 12.37L7.26 11.80L7.17 11.22L7.06 10.61L7.21 10.02L7.49 9.49L7.68 8.90L7.90 8.31L8.42 7.93L9.11 7.82L9.67 7.64L10.07 7.20L10.52 6.75L11.09 6.56L11.69 6.52L12.28 6.54L12.85 6.73L13.34 7.16L13.79 7.49L14.36 7.48L15.09 7.34L15.73 7.48L16.13 7.95L16.46 8.47L16.80 8.96L16.98 9.54L16.95 10.16L16.98 10.73L17.22 11.24L17.39 11.80Z" fill="none" stroke="#A9271C" stroke-width="0.45" opacity="0.86"/><path d="M18.91 11.90L18.70 12.64L18.34 13.31L18.13 14.00L17.92 14.68L17.45 15.23L16.89 15.68L16.54 16.30L16.30 17.11L15.80 17.73L15.03 17.89L14.24 17.89L13.54 18.04L12.86 18.24L12.14 18.32L11.40 18.48L10.57 18.80L9.71 18.85L9.09 18.24L8.73 17.33L8.34 16.67L7.76 16.28L7.19 15.84L6.77 15.27L6.29 14.72L5.68 14.16L5.28 13.47L5.32 12.67L5.50 11.90L5.45 11.15L5.39 10.36L5.67 9.64L6.11 9.00L6.42 8.30L6.76 7.61L7.43 7.19L8.30 7.08L8.99 6.88L9.48 6.37L10.01 5.82L10.69 5.55L11.42 5.46L12.14 5.41L12.85 5.58L13.48 6.03L14.07 6.38L14.84 6.29L15.83 6.04L16.72 6.16L17.31 6.74L17.78 7.40L18.26 8.06L18.51 8.83L18.46 9.69L18.47 10.45L18.74 11.16L18.91 11.90Z" fill="none" stroke="#A9271C" stroke-width="0.38" opacity="0.58"/><path d="M13.39 11.50 L16.72 12.30 L20.85 12.60 L20.79 13.22 Z" fill="#4A1610"/><circle cx="12.79" cy="11.44" r="0.75" fill="#5B1A12"/><path d="M22.84 12.00L22.64 13.20L22.53 14.40L22.39 15.64L22.08 16.85L21.35 17.87L20.75 18.98L19.90 19.90L19.01 20.79L18.00 21.55L16.97 22.32L15.78 22.81L14.46 22.76L13.28 23.35L12.00 23.56L10.69 23.62L9.36 23.56L8.12 23.09L7.03 22.32L6.09 21.41L5.37 20.31L4.38 19.62L3.57 18.72L2.98 17.67L2.26 16.69L1.71 15.60L1.15 14.48L0.61 13.28L0.24 12.00L0.18 10.67L0.49 9.37L1.06 8.17L1.71 7.05L2.37 5.95L3.08 4.89L3.92 3.92L4.92 3.12L6.13 2.66L7.16 1.96L8.32 1.47L9.51 1.08L10.77 1.08L12.00 0.96L13.21 1.23L14.39 1.53L15.58 1.76L16.83 1.96L18.11 2.27L19.13 3.06L20.36 3.64L21.24 4.63L21.99 5.72L22.62 6.89L23.04 8.14L23.19 9.45L22.87 10.78L22.84 12.00Z" fill="url(#ls-sheen)"/></svg><span class="lo">Oak</span></div></div>
+  <div class="ls-bar" aria-hidden="true"><i></i></div>
+  <div id="loadMsg">Loading…</div>
+  <div class="ls-bytes" aria-hidden="true"></div>
+</div>
+<noscript><div class="ld-card" style="position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);z-index:30"><h2>JavaScript is off</h2><p>The 3D model needs JavaScript and WebGL 2.</p></div></noscript>
+
+<div id="logo" aria-label="Live Oak"><span class="lw">Live</span>
+  
+  <svg viewBox="0 0 24 24" aria-hidden="true"><defs><radialGradient id="lo-sheen" cx="40%" cy="35%" r="70%"><stop offset="0" stop-color="#fff" stop-opacity=".22"/><stop offset=".6" stop-color="#fff" stop-opacity="0"/></radialGradient></defs><path d="M22.84 12.00L22.64 13.20L22.53 14.40L22.39 15.64L22.08 16.85L21.35 17.87L20.75 18.98L19.90 19.90L19.01 20.79L18.00 21.55L16.97 22.32L15.78 22.81L14.46 22.76L13.28 23.35L12.00 23.56L10.69 23.62L9.36 23.56L8.12 23.09L7.03 22.32L6.09 21.41L5.37 20.31L4.38 19.62L3.57 18.72L2.98 17.67L2.26 16.69L1.71 15.60L1.15 14.48L0.61 13.28L0.24 12.00L0.18 10.67L0.49 9.37L1.06 8.17L1.71 7.05L2.37 5.95L3.08 4.89L3.92 3.92L4.92 3.12L6.13 2.66L7.16 1.96L8.32 1.47L9.51 1.08L10.77 1.08L12.00 0.96L13.21 1.23L14.39 1.53L15.58 1.76L16.83 1.96L18.11 2.27L19.13 3.06L20.36 3.64L21.24 4.63L21.99 5.72L22.62 6.89L23.04 8.14L23.19 9.45L22.87 10.78L22.84 12.00Z" fill="#5B2D1B"/><path d="M22.44 12.00L22.25 13.15L22.14 14.31L22.02 15.51L21.72 16.68L21.01 17.66L20.44 18.73L19.62 19.62L18.76 20.48L17.79 21.22L16.80 21.96L15.65 22.43L14.37 22.37L13.23 22.95L12.00 23.16L10.73 23.23L9.45 23.18L8.25 22.72L7.20 21.97L6.30 21.07L5.62 20.01L4.66 19.34L3.88 18.48L3.31 17.46L2.61 16.52L2.09 15.47L1.54 14.39L1.01 13.24L0.63 12.00L0.58 10.71L0.88 9.46L1.43 8.30L2.07 7.22L2.71 6.16L3.39 5.13L4.20 4.20L5.17 3.43L6.34 3.00L7.34 2.31L8.45 1.85L9.60 1.47L10.81 1.47L12.00 1.36L13.17 1.62L14.30 1.91L15.45 2.13L16.66 2.32L17.90 2.61L18.88 3.37L20.08 3.92L20.93 4.88L21.66 5.93L22.26 7.06L22.67 8.27L22.80 9.53L22.48 10.82L22.44 12.00Z" fill="none" stroke="#7A3F27" stroke-width="0.5" opacity=".7"/><path d="M21.43 12.85 L22.54 12.68" stroke="#4A1610" stroke-width="0.41" stroke-linecap="round" opacity=".8"/><path d="M19.51 17.17 L21.20 18.16" stroke="#4A1610" stroke-width="0.36" stroke-linecap="round" opacity=".8"/><path d="M15.90 20.88 L16.40 22.42" stroke="#4A1610" stroke-width="0.45" stroke-linecap="round" opacity=".8"/><path d="M11.42 21.52 L11.11 23.48" stroke="#4A1610" stroke-width="0.45" stroke-linecap="round" opacity=".8"/><path d="M6.90 19.40 L6.08 21.10" stroke="#4A1610" stroke-width="0.39" stroke-linecap="round" opacity=".8"/><path d="M4.31 16.69 L2.80 17.25" stroke="#4A1610" stroke-width="0.46" stroke-linecap="round" opacity=".8"/><path d="M2.41 14.17 L1.36 14.71" stroke="#4A1610" stroke-width="0.28" stroke-linecap="round" opacity=".8"/><path d="M3.20 7.93 L1.85 7.06" stroke="#4A1610" stroke-width="0.42" stroke-linecap="round" opacity=".8"/><path d="M6.34 4.80 L5.01 3.25" stroke="#4A1610" stroke-width="0.47" stroke-linecap="round" opacity=".8"/><path d="M10.46 2.52 L10.55 1.10" stroke="#4A1610" stroke-width="0.32" stroke-linecap="round" opacity=".8"/><path d="M14.06 3.42 L14.21 1.64" stroke="#4A1610" stroke-width="0.39" stroke-linecap="round" opacity=".8"/><path d="M18.76 4.26 L19.83 3.40" stroke="#4A1610" stroke-width="0.36" stroke-linecap="round" opacity=".8"/><path d="M20.89 8.65 L22.92 8.16" stroke="#4A1610" stroke-width="0.28" stroke-linecap="round" opacity=".8"/><path d="M21.32 12.00L21.10 13.03L20.70 13.99L20.46 14.96L20.20 15.95L19.59 16.77L18.85 17.46L18.36 18.36L17.98 19.49L17.25 20.36L16.16 20.64L15.04 20.68L14.03 20.90L13.03 21.14L12.00 21.22L10.95 21.36L9.79 21.68L8.63 21.64L7.76 20.80L7.23 19.59L6.68 18.68L5.91 18.09L5.16 17.45L4.59 16.66L3.96 15.87L3.18 15.09L2.66 14.13L2.66 13.05L2.83 12.00L2.73 10.96L2.64 9.86L2.96 8.84L3.50 7.91L3.90 6.91L4.36 5.91L5.26 5.26L6.42 5.01L7.39 4.66L8.12 3.94L8.92 3.20L9.91 2.83L10.96 2.73L12.00 2.70L13.02 2.96L13.92 3.59L14.76 4.11L15.81 4.09L17.09 3.89L18.25 4.17L19.03 4.97L19.66 5.89L20.29 6.79L20.65 7.83L20.65 8.97L20.71 10.01L21.08 10.98L21.32 12.00Z" fill="#E9CFA6"/><path d="M20.88 12.00L20.67 12.98L20.28 13.89L20.05 14.82L19.80 15.76L19.22 16.54L18.51 17.19L18.06 18.06L17.70 19.15L17.02 19.99L15.97 20.25L14.90 20.27L13.93 20.47L12.98 20.71L12.00 20.78L10.99 20.93L9.89 21.25L8.77 21.23L7.95 20.41L7.46 19.22L6.95 18.34L6.21 17.79L5.50 17.18L4.96 16.42L4.35 15.68L3.59 14.94L3.08 14.04L3.09 13.00L3.26 12.00L3.16 11.00L3.06 9.96L3.37 8.98L3.89 8.09L4.27 7.14L4.70 6.18L5.56 5.56L6.69 5.35L7.62 5.03L8.31 4.33L9.06 3.61L10.00 3.26L11.00 3.16L12.00 3.13L12.97 3.39L13.82 4.02L14.62 4.52L15.62 4.49L16.86 4.26L17.98 4.51L18.72 5.28L19.32 6.16L19.92 7.02L20.26 8.02L20.23 9.12L20.29 10.11L20.64 11.03L20.88 12.00Z" fill="none" stroke="#D6B488" stroke-width="0.35" opacity="0.8"/><path d="M20.45 12.00L20.24 12.93L19.85 13.79L19.64 14.67L19.41 15.57L18.85 16.31L18.17 16.92L17.75 17.75L17.43 18.81L16.79 19.62L15.78 19.85L14.75 19.86L13.84 20.05L12.93 20.28L12.00 20.35L11.04 20.50L9.98 20.83L8.91 20.82L8.14 20.02L7.69 18.85L7.22 18.00L6.52 17.48L5.84 16.91L5.33 16.19L4.74 15.49L4.00 14.80L3.51 13.94L3.52 12.95L3.70 12.00L3.59 11.05L3.49 10.06L3.78 9.12L4.28 8.28L4.63 7.37L5.04 6.45L5.87 5.87L6.97 5.69L7.85 5.40L8.49 4.72L9.21 4.02L10.10 3.68L11.05 3.59L12.00 3.57L12.92 3.83L13.73 4.44L14.48 4.93L15.43 4.88L16.63 4.63L17.71 4.85L18.41 5.59L18.98 6.44L19.55 7.25L19.87 8.21L19.82 9.26L19.86 10.21L20.21 11.07L20.45 12.00Z" fill="none" stroke="#D6B488" stroke-width="0.35" opacity="0.8"/><path class="heart" d="M20.08 12.00L19.87 12.89L19.49 13.71L19.28 14.55L19.08 15.41L18.54 16.11L17.88 16.69L17.48 17.48L17.20 18.52L16.59 19.31L15.62 19.52L14.63 19.51L13.75 19.69L12.89 19.91L12.00 19.98L11.08 20.13L10.07 20.47L9.04 20.47L8.30 19.68L7.89 18.54L7.45 17.71L6.79 17.21L6.13 16.68L5.64 15.99L5.08 15.33L4.35 14.68L3.87 13.86L3.89 12.91L4.07 12.00L3.97 11.09L3.85 10.14L4.14 9.25L4.62 8.45L4.95 7.57L5.33 6.68L6.14 6.14L7.20 5.98L8.05 5.71L8.66 5.06L9.33 4.37L10.18 4.05L11.09 3.96L12.00 3.94L12.88 4.20L13.64 4.80L14.35 5.28L15.27 5.21L16.43 4.95L17.47 5.14L18.15 5.85L18.69 6.67L19.24 7.45L19.53 8.37L19.47 9.39L19.50 10.29L19.84 11.12L20.08 12.00Z" fill="#E0412F"/><path d="M13.56 11.50L13.53 11.59L13.49 11.67L13.47 11.76L13.44 11.85L13.39 11.92L13.32 11.98L13.28 12.07L13.25 12.18L13.19 12.26L13.09 12.29L12.99 12.29L12.89 12.32L12.80 12.35L12.71 12.36L12.61 12.38L12.49 12.42L12.38 12.43L12.30 12.34L12.25 12.22L12.20 12.12L12.13 12.07L12.06 12.01L12.01 11.93L11.95 11.86L11.88 11.78L11.83 11.69L11.84 11.59L11.87 11.50L11.86 11.40L11.85 11.30L11.89 11.21L11.94 11.13L11.97 11.04L12.01 10.94L12.09 10.88L12.20 10.87L12.29 10.83L12.35 10.76L12.42 10.68L12.51 10.64L12.61 10.63L12.71 10.62L12.80 10.64L12.89 10.71L12.97 10.76L13.07 10.75L13.20 10.72L13.31 10.74L13.38 10.82L13.44 10.91L13.50 11.00L13.52 11.10L13.51 11.21L13.51 11.31L13.54 11.40L13.56 11.50Z" fill="none" stroke="#A9271C" stroke-width="0.35" opacity="0.69"/><path d="M14.94 11.60L14.88 11.86L14.76 12.10L14.70 12.34L14.63 12.59L14.46 12.79L14.26 12.95L14.14 13.17L14.05 13.45L13.86 13.66L13.58 13.71L13.30 13.70L13.05 13.74L12.81 13.79L12.56 13.81L12.31 13.85L12.03 13.95L11.74 13.95L11.53 13.74L11.41 13.43L11.28 13.21L11.08 13.08L10.88 12.94L10.73 12.75L10.56 12.56L10.33 12.38L10.18 12.14L10.18 11.86L10.23 11.60L10.20 11.33L10.17 11.05L10.26 10.79L10.41 10.56L10.52 10.31L10.64 10.06L10.88 9.92L11.20 9.88L11.45 9.82L11.63 9.64L11.82 9.46L12.06 9.38L12.31 9.37L12.56 9.36L12.81 9.43L13.02 9.60L13.22 9.72L13.48 9.70L13.81 9.61L14.11 9.65L14.32 9.85L14.48 10.07L14.65 10.28L14.75 10.54L14.75 10.83L14.76 11.09L14.87 11.34L14.94 11.60Z" fill="none" stroke="#A9271C" stroke-width="0.43" opacity="0.84"/><path d="M16.27 11.70L16.18 12.12L16.00 12.51L15.91 12.92L15.80 13.32L15.54 13.65L15.21 13.92L15.01 14.29L14.86 14.76L14.56 15.10L14.10 15.18L13.63 15.15L13.23 15.21L12.83 15.29L12.42 15.31L12.01 15.36L11.55 15.51L11.09 15.51L10.76 15.16L10.57 14.65L10.36 14.29L10.04 14.08L9.73 13.85L9.49 13.54L9.20 13.25L8.84 12.95L8.59 12.57L8.58 12.13L8.65 11.70L8.59 11.27L8.53 10.81L8.66 10.38L8.90 10.00L9.07 9.59L9.26 9.17L9.65 8.93L10.17 8.87L10.58 8.77L10.87 8.48L11.20 8.19L11.59 8.06L12.01 8.04L12.42 8.05L12.82 8.18L13.16 8.45L13.48 8.67L13.90 8.64L14.43 8.51L14.91 8.58L15.23 8.89L15.49 9.25L15.77 9.60L15.93 10.01L15.92 10.47L15.96 10.89L16.14 11.28L16.27 11.70Z" fill="none" stroke="#A9271C" stroke-width="0.52" opacity="0.86"/><path d="M17.39 11.80L17.29 12.36L17.08 12.89L16.98 13.44L16.88 14.01L16.55 14.48L16.14 14.88L15.90 15.41L15.72 16.11L15.32 16.63L14.68 16.78L14.02 16.76L13.44 16.86L12.87 16.99L12.28 17.01L11.69 17.07L11.04 17.26L10.38 17.22L9.93 16.69L9.68 15.93L9.42 15.39L9.02 15.07L8.62 14.72L8.32 14.29L7.97 13.88L7.51 13.47L7.19 12.96L7.18 12.37L7.26 11.80L7.17 11.22L7.06 10.61L7.21 10.02L7.49 9.49L7.68 8.90L7.90 8.31L8.42 7.93L9.11 7.82L9.67 7.64L10.07 7.20L10.52 6.75L11.09 6.56L11.69 6.52L12.28 6.54L12.85 6.73L13.34 7.16L13.79 7.49L14.36 7.48L15.09 7.34L15.73 7.48L16.13 7.95L16.46 8.47L16.80 8.96L16.98 9.54L16.95 10.16L16.98 10.73L17.22 11.24L17.39 11.80Z" fill="none" stroke="#A9271C" stroke-width="0.45" opacity="0.86"/><path d="M18.91 11.90L18.70 12.64L18.34 13.31L18.13 14.00L17.92 14.68L17.45 15.23L16.89 15.68L16.54 16.30L16.30 17.11L15.80 17.73L15.03 17.89L14.24 17.89L13.54 18.04L12.86 18.24L12.14 18.32L11.40 18.48L10.57 18.80L9.71 18.85L9.09 18.24L8.73 17.33L8.34 16.67L7.76 16.28L7.19 15.84L6.77 15.27L6.29 14.72L5.68 14.16L5.28 13.47L5.32 12.67L5.50 11.90L5.45 11.15L5.39 10.36L5.67 9.64L6.11 9.00L6.42 8.30L6.76 7.61L7.43 7.19L8.30 7.08L8.99 6.88L9.48 6.37L10.01 5.82L10.69 5.55L11.42 5.46L12.14 5.41L12.85 5.58L13.48 6.03L14.07 6.38L14.84 6.29L15.83 6.04L16.72 6.16L17.31 6.74L17.78 7.40L18.26 8.06L18.51 8.83L18.46 9.69L18.47 10.45L18.74 11.16L18.91 11.90Z" fill="none" stroke="#A9271C" stroke-width="0.38" opacity="0.58"/><path d="M13.39 11.50 L16.72 12.30 L20.85 12.60 L20.79 13.22 Z" fill="#4A1610"/><circle cx="12.79" cy="11.44" r="0.75" fill="#5B1A12"/><path d="M22.84 12.00L22.64 13.20L22.53 14.40L22.39 15.64L22.08 16.85L21.35 17.87L20.75 18.98L19.90 19.90L19.01 20.79L18.00 21.55L16.97 22.32L15.78 22.81L14.46 22.76L13.28 23.35L12.00 23.56L10.69 23.62L9.36 23.56L8.12 23.09L7.03 22.32L6.09 21.41L5.37 20.31L4.38 19.62L3.57 18.72L2.98 17.67L2.26 16.69L1.71 15.60L1.15 14.48L0.61 13.28L0.24 12.00L0.18 10.67L0.49 9.37L1.06 8.17L1.71 7.05L2.37 5.95L3.08 4.89L3.92 3.92L4.92 3.12L6.13 2.66L7.16 1.96L8.32 1.47L9.51 1.08L10.77 1.08L12.00 0.96L13.21 1.23L14.39 1.53L15.58 1.76L16.83 1.96L18.11 2.27L19.13 3.06L20.36 3.64L21.24 4.63L21.99 5.72L22.62 6.89L23.04 8.14L23.19 9.45L22.87 10.78L22.84 12.00Z" fill="url(#lo-sheen)"/></svg><span class="lo">Oak</span></div>
+<script>if(/[?&](logo|loadscreen)=/.test(location.search))document.write('<script src="./mods/brand_flag.js"><\/script>');</script>
+
+<aside id="ui" class="panel" aria-label="Options">
+  <div class="hd">
+    
+    <div class="brand"><h1 hidden>Rainbow Ranch</h1><div class="optl">Options</div></div>
+    <button id="uiToggle" class="ib" type="button" aria-expanded="true" aria-controls="uiBody" title="Options">
+      <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M5 12.5 L10 7.5 L15 12.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+  </div>
+  <div id="uiBody">
+    <div id="uiTop"></div>
+    <section class="grp" data-g="places">
+      <button class="gh" type="button" aria-expanded="true">Places</button>
+      <div class="gb">
+        <div class="acts" id="viewActs"></div>
+        <div class="gm"></div>
+      </div>
+    </section>
+    <section class="grp" data-g="play" hidden>
+      <button class="gh" type="button" aria-expanded="false">Play</button>
+      <div class="gb"><div class="gm"></div></div>
+    </section>
+    <section class="grp" data-g="look">
+      <button class="gh" type="button" aria-expanded="false">Look</button>
+      <div class="gb">
+        <label class="row"><span>Season</span><select id="season"><option value="summer">Summer</option><option value="fall">Fall</option><option value="winter">Winter</option><option value="spring">Spring</option></select></label>
+        <div class="gm"></div>
+      </div>
+    </section>
+    <section class="grp" data-g="map">
+      <button class="gh" type="button" aria-expanded="false">Map</button>
+      <div class="gb">
+        <div>
+          <label><input type="checkbox" id="tRoads" checked> Roads <span class="lg" style="background:#a86a32"></span></label>
+          <label><input type="checkbox" id="tProp"> Property line <span class="lg" style="background:#ffe14a;box-shadow:0 0 0 1px rgba(0,0,0,.15)"></span></label>
+        </div>
+        <div class="gm" id="mapMods"></div>
+        
+        <div style="display:none"><label><input type="checkbox" id="tDetails" checked> Details</label>
+        <label><input type="checkbox" id="tSolid"> Solid tree shapes</label>
+        <label id="lLimbs" hidden><input type="checkbox" id="tLimbs" checked> Oak limbs</label></div>
+      </div>
+    </section>
+    <section class="grp" data-g="fire" hidden>
+      <button class="gh" type="button" aria-expanded="false">Fire</button>
+      <div class="gb"><div class="gm"></div></div>
+    </section>
+    <section class="grp" data-g="sound" hidden>
+      <button class="gh" type="button" aria-expanded="false">Sound</button>
+      <div class="gb"><div class="gm"></div></div>
+    </section>
+    <section class="grp" data-g="graphics">
+      <button class="gh" type="button" aria-expanded="false">Graphics</button>
+      <div class="gb"><div class="gm"></div></div>
+    </section>
+    <section class="grp" data-g="game" hidden>
+      <button class="gh" type="button" aria-expanded="false">Game</button>
+      <div class="gb"><div class="gm"></div></div>
+    </section>
+    <section class="grp adv" data-g="advanced">
+      <button class="gh" type="button" aria-expanded="false">Advanced</button>
+      <div class="gb">
+        <div class="two">
+          <label><input type="checkbox" id="tTrees" checked> Trees</label>
+          <label><input type="checkbox" id="tShrubs" checked> Shrubs</label>
+          <label><input type="checkbox" id="tBldg" checked> Buildings</label>
+          <label><input type="checkbox" id="tSpecies"> Species colors</label>
+        </div>
+        <div id="legend"></div>
+        <label><input type="checkbox" id="tShadows" checked> Sun shadows</label>
+        <label><input type="checkbox" id="tAO"> Ambient occlusion</label>
+        <div class="gm"></div>
+        <div id="stats">–</div>
+        <div class="about" id="about"><div class="modh">About</div><div class="hint" id="credits">Elevation: USGS 3DEP. Imagery: USDA NAIP 2022 (public domain).</div></div>
+      </div>
+    </section>
+  </div>
+</aside>
+
+<div id="tools" role="toolbar" aria-label="View tools" aria-orientation="vertical">
+  <button class="tb" type="button" data-act="north" title="Face north (N)" aria-label="Compass: face north">
+    <svg viewBox="0 0 40 40" aria-hidden="true"><g id="needle"><path d="M20 7.5 L24.2 20 L15.8 20 Z" fill="#8B3A1D"/><path d="M20 32.5 L24.2 20 L15.8 20 Z" fill="#A7B1B3"/><circle cx="20" cy="20" r="1.6" fill="#F6F1E6"/><text x="20" y="6.3" text-anchor="middle" font-size="6.5" font-family="IBM Plex Sans, system-ui, sans-serif" font-weight="600" fill="#1C2A2E">N</text></g></svg>
+  </button>
+  <div class="gap"></div>
+  <button class="tb q" type="button" data-act="help" title="Controls (?)" aria-label="Controls">?</button>
+</div>
+<div id="info" class="panel" role="dialog" aria-live="polite" aria-label="Details"></div>
+<div id="toast" role="status" aria-live="polite"></div>
+<div id="hint" aria-hidden="true"></div>
+
+<div id="help" hidden role="dialog" aria-labelledby="helpTitle">
+  <div class="sheet">
+    <button class="x" type="button" aria-label="Close">×</button>
+    <h2 id="helpTitle">Controls</h2>
+    <div class="cols">
+      <div><h3>Mouse</h3><dl>
+        <dt>Drag</dt><dd>Move</dd>
+        <dt>Right-drag</dt><dd>Turn · tilt</dd>
+        <dt>Scroll</dt><dd>Zoom</dd>
+        <dt>Click</dt><dd>Details</dd></dl></div>
+      <div class="touchcol"><h3>Touch</h3><dl>
+        <dt>One finger</dt><dd>Move</dd>
+        <dt>Pinch</dt><dd>Zoom · turn</dd>
+        <dt>Two fingers</dt><dd>Tilt</dd>
+        <dt>Tap</dt><dd>Details</dd></dl></div>
+      <div><h3>Keys</h3><dl>
+        <dt><kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd></dt><dd>Move</dd>
+        <dt><kbd>Q</kbd> <kbd>E</kbd> · <kbd>←</kbd> <kbd>→</kbd></dt><dd>Turn</dd>
+        <dt><kbd>R</kbd> <kbd>F</kbd> · <kbd>↑</kbd> <kbd>↓</kbd></dt><dd>Tilt</dd>
+        <dt><kbd>C</kbd> <kbd>Space</kbd></dt><dd>Up · down</dd>
+        <dt><kbd>+</kbd> <kbd>−</kbd></dt><dd>Zoom</dd>
+        <dt><kbd>1</kbd>–<kbd>4</kbd></dt><dd>Places · <kbd>H</kbd> Home</dd>
+        <dt><kbd>N</kbd></dt><dd>North</dd>
+        <dt><kbd>Y</kbd></dt><dd>Copy view</dd>
+        <dt><kbd>I</kbd></dt><dd>Clear screen</dd>
+        <dt><kbd>Esc</kbd></dt><dd>Close</dd></dl></div>
+    </div>
+  </div>
+</div>
+<script>window.__pvCard=function(title,html,detail){var l=document.getElementById("load");if(!l)return;var esc=function(s){return String(s).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})};l.className="err";l.style.display="";l.style.opacity="";l.innerHTML='<div class="ld-card" role="alert"><div class="eyebrow" style="text-transform:none;letter-spacing:.04em">Live Oak</div><h2>'+esc(title)+"</h2><p>"+html+"</p>"+(detail?"<details><summary>Technical details</summary><pre>"+esc(detail)+"</pre></details>":"")+'<button type="button">Try again</button></div>';l.querySelector("button").onclick=function(){location.reload()}};window.__pvLoadFail=function(){if(window.__viewer)return;__pvCard("Couldn’t start","<span>Check the connection and try again.</span>")};setTimeout(function(){var m=document.getElementById("loadMsg");if(!window.__viewer&&m&&!document.getElementById("load").classList.contains("err"))m.textContent="Still loading…"},25e3);</script>
+<script src="./mods/quality_boot.js"></script>
+<script>(function(){var L=document.getElementById("load");if(!L||!L.classList.contains("ls")||L.__ls)return;L.__ls=true;var mq=window.matchMedia?matchMedia("(prefers-reduced-motion: reduce)"):null;function still(){return!!(mq&&mq.matches)&&!L.classList.contains("ls-force")}var rings=[].slice.call(L.querySelectorAll('.ld-title svg path[stroke="#A9271C"]'));var drawRings=L.classList.contains("ls-A");rings.forEach(function(r){r.classList.add("rg");if(drawRings){r.setAttribute("pathLength","1");r.style.strokeDasharray="1";r.style.strokeDashoffset="1"}});var bytes=L.querySelector(".ls-bytes"),p=0,mb=0,saved=false,est=40;try{est=parseFloat(localStorage.getItem("lo-load-mb"))||40}catch(e){}var STAGES=[["Loading the land",.04],["Loading terrain",.08],["Building the scene",.42],["Preparing the view",.47],["Getting ready",.5]];function tick(){if(L.style.display==="none"||L.classList.contains("err")||!L.classList.contains("ls")){clearInterval(iv);return}var bar=document.getElementById("pvbar"),f=bar&&bar.querySelector(".f"),lab=bar&&bar.querySelector(".l"),m=document.getElementById("loadMsg");var q=0,t=m?m.dataset.stage||m.textContent:"";if(f&&!bar.classList.contains("ind"))q=(parseFloat(f.style.width)||0)/100*.4;else if(lab){var x=parseFloat(lab.textContent);if(x>0){mb=x;q=.4*Math.min(.97,x/Math.max(est,x*1.03))}}for(var i=0;i<STAGES.length;i++)if(t.indexOf(STAGES[i][0])===0)q=Math.max(q,STAGES[i][1]);var rd=m&&parseFloat(m.dataset.ready);if(rd>0)q=Math.max(q,.47+.53*rd);if(q>=.42&&mb>0&&!saved){saved=true;try{localStorage.setItem("lo-load-mb",mb.toFixed(1))}catch(e){}}if(L.classList.contains("done"))q=1;p=Math.max(p,q);L.style.setProperty("--p",p.toFixed(3));if(bytes&&lab)bytes.textContent=lab.textContent;if(drawRings)for(var k=0,s=still();k<rings.length;k++){var d=Math.min(1,Math.max(0,p*rings.length-k));rings[k].style.strokeDashoffset=(1-(s?Math.floor(d+.001):d)).toFixed(3)}}L.__lsReset=function(){p=0;tick()};var iv=setInterval(tick,200);tick()})();</script>
+<script type="module" src="./main.js" onerror="__pvLoadFail()"></script>
+</body>
+</html>
