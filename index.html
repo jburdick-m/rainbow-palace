@@ -239,7 +239,13 @@ figcaption b { font:400 14px var(--font-display); letter-spacing:.08em; text-tra
     <div class="tgroup" role="group" aria-label="Layers">
       <span class="eyebrow">Show</span>
       <label class="chip-t"><input type="checkbox" id="L-roof" checked><span>Roof</span></label>
+      <label class="chip-t"><input type="checkbox" id="L-siding" checked><span>Siding</span></label>
+      <label class="chip-t"><input type="checkbox" id="L-wood" checked><span>Firewood</span></label>
+      <label class="chip-t"><input type="checkbox" id="L-gear" checked><span>Equipment</span></label>
       <label class="chip-t"><input type="checkbox" id="L-vehicles" checked><span>Vehicles</span></label>
+      <label class="chip-t"><input type="checkbox" id="L-site" checked><span>Site</span></label>
+      <label class="chip-t"><input type="checkbox" id="L-xray"><span>X-ray</span></label>
+      <button class="btn" data-view="frame">Frame only</button>
     </div>
     <div class="tgroup" role="group" aria-label="Views">
       <span class="eyebrow">View</span>
@@ -573,8 +579,16 @@ Back lean-to ${S.L}′ × ${P.back_lt.depth}′`,
     };
     freeBtn.addEventListener('click', () => setFree(!free));
     document.addEventListener('keydown', e => { if (e.key === 'Escape' && free) setFree(false); });
-    ['roof', 'vehicles'].forEach(k => { const el = document.getElementById('L-' + k); if (el) el.addEventListener('change', () => post({ palace: 'layer', k, on: el.checked })); });
-    document.querySelectorAll('[data-view]').forEach(b => b.addEventListener('click', () => { if (free) setFree(false, true); post({ palace: 'view', v: b.dataset.view }); }));
+    const LAYERS = ['roof', 'siding', 'wood', 'gear', 'vehicles', 'site', 'xray'];
+    LAYERS.forEach(k => { const el = document.getElementById('L-' + k); if (el) el.addEventListener('change', () => post({ palace: 'layer', k, on: el.checked })); });
+    document.querySelectorAll('[data-view]').forEach(b => b.addEventListener('click', () => {
+      if (free) setFree(false, true);
+      if (b.dataset.view === 'frame') {   // Frame only: as the road page, the roof, siding, firewood and equipment off, then the yard view
+        ['roof', 'siding', 'wood', 'gear'].forEach(k => { const el = document.getElementById('L-' + k); if (el) el.checked = false; post({ palace: 'layer', k, on: false }); });
+        post({ palace: 'view', v: 'yard' }); return;
+      }
+      post({ palace: 'view', v: b.dataset.view });
+    }));
     document.getElementById('doorsBtn').addEventListener('click', e => { open = !open; post({ palace: 'doors', open }); e.target.textContent = open ? 'Close doors' : 'Open doors'; });
   }
 

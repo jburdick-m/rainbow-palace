@@ -39,7 +39,7 @@
 // Loading progress for the page around the frame (its "Loading 3D view" bar): bytes of the finished downloads under
 // model/ (resource timing) against the build's total (__TOTAL__, written by the packer), at most ten times a second.
 (function () {
-  var TOTAL = 23230696, got = 0, seen = {}, last = 0;
+  var TOTAL = 23233791, got = 0, seen = {}, last = 0;
   function send(force) {
     var now = Date.now(); if (!force && now - last < 100) return; last = now;
     try { parent.postMessage({ palace: 'progress', p: Math.min(0.97, got / TOTAL) }, '*'); } catch (e) { /* no parent */ }
