@@ -54,8 +54,13 @@ code, .mono { font-family:var(--font-mono); font-size:.9em; }
 .cvwrap { position:relative; height:560px; min-width:0; }
 #cv { display:block; width:100%; height:100%; touch-action:none; cursor:grab; }
 #cv { border:0; }
-.cvload { position:absolute; inset:0; display:grid; place-items:center; font:13px var(--font-mono); color:var(--muted); pointer-events:none; }
-.cvload[hidden] { display:none; }
+#cv { opacity:0; transition:opacity .4s; } #cv.on { opacity:1; }
+.cvload { position:absolute; inset:0; display:grid; place-items:center; background:var(--sheet); pointer-events:none; transition:opacity .4s; }
+.cvload.done { opacity:0; } .cvload[hidden] { display:none; }
+.cvload > div { display:grid; gap:10px; justify-items:center; }
+.cvload span { font:500 11.5px/1.3 var(--font-display); letter-spacing:.16em; text-transform:uppercase; color:var(--muted); }
+.cvload b { display:block; width:min(220px, 50vw); height:2px; background:var(--rule); overflow:hidden; }
+.cvload i { display:block; height:100%; background:var(--ink); transform:scaleX(.02); transform-origin:left; transition:transform .3s; }
 
 #cv:active { cursor:grabbing; }
 .cvhint { position:absolute; left:12px; bottom:10px; font:12px var(--font-mono); color:var(--ink); background:color-mix(in srgb, var(--sheet) 82%, transparent); padding:3px 8px; border-radius:3px; pointer-events:none; }
@@ -252,7 +257,7 @@ figcaption b { font:400 14px var(--font-display); letter-spacing:.08em; text-tra
     </div>
   </div>
   <div class="viewer">
-    <div class="cvwrap" id="cvwrap"><iframe id="cv" src="model/terrain_veg/viewer_dev/index.html" title="3D model of the barn on its site. Drag to turn around the barn, scroll or pinch to zoom; use the buttons to change views." loading="lazy"></iframe><div class="cvload" id="cvload">Loading the 3D model…</div><div class="cvhint" id="cvhint" hidden></div></div>
+    <div class="cvwrap" id="cvwrap"><iframe id="cv" src="model/terrain_veg/viewer_dev/index.html" title="3D model of the barn on its site. Drag to turn around the barn, scroll or pinch to zoom; use the buttons to change views." loading="lazy"></iframe><div class="cvload" id="cvload" role="status"><div><span>Loading 3D view</span><b><i></i></b></div></div><div class="cvhint" id="cvhint" hidden></div></div>
   </div>
 </section>
 
@@ -546,13 +551,18 @@ Back lean-to ${S.L}′ × ${P.back_lt.depth}′`,
     const NM = { yard: 'Yard', front: 'Open front', storm: 'Tractor end', road: 'Back' };
     const BR = (M.site && M.site.bearing) || 190;
     document.querySelectorAll('[data-view]').forEach(b => { const th = VIEWS[b.dataset.view], nm = NM[b.dataset.view]; if (th !== undefined && nm) b.textContent = `${nm} (${pt8(BR + 90 - th * 180 / Math.PI)})`; });
-    const load = document.getElementById('cvload'), hint = document.getElementById('cvhint'), freeBtn = document.getElementById('freeBtn');
+    const load = document.getElementById('cvload'), bar = load.querySelector('i'), hint = document.getElementById('cvhint'), freeBtn = document.getElementById('freeBtn');
     let ready = false, free = false, open = true; const queue = [];
     const send = m => { try { fr.contentWindow.postMessage(m, '*'); } catch (e) { /* not loaded */ } };
     const post = m => { if (ready) send(m); else queue.push(m); };
     addEventListener('message', e => {
       if (e.source !== fr.contentWindow || !e.data || typeof e.data.palace !== 'string') return;
-      if (e.data.palace === 'ready') { ready = true; load.hidden = true; queue.splice(0).forEach(send); }
+      if (e.data.palace === 'progress') { if (!ready) bar.style.transform = `scaleX(${Math.max(0.02, +e.data.p || 0)})`; }
+      else if (e.data.palace === 'ready') {
+        ready = true; queue.splice(0).forEach(send); bar.style.transform = 'scaleX(1)';
+        // the scene's first frames are drawn by now; show it
+        requestAnimationFrame(() => requestAnimationFrame(() => { fr.classList.add('on'); load.classList.add('done'); setTimeout(() => { load.hidden = true; }, 400); }));
+      }
       else if (e.data.palace === 'free') setFree(!!e.data.on, true);
     });
     const setFree = (on, quiet) => {
